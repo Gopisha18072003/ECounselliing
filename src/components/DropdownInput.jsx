@@ -3,12 +3,15 @@ import React from "react";
 const Dropdown = ({ name, id, options, value='', onChange, label, required }) => {
   return (
     <div className="flex gap-[2rem] justify-start items-center"> 
-      <div className="w-2/5">
+      <div className="w-2/5 flex gap-1">
         {label && (
           <label htmlFor={id} className="block text-gray-700 text-p font-medium">
             {label}
           </label>
         )}
+        {
+          required && <span className="text-[1.25rem] text-red-500 ">*</span>
+        }
       </div>
       <div className="w-[44%]">
         <select

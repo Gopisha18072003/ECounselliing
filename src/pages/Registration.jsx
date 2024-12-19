@@ -8,15 +8,60 @@ import { GoHomeFill } from "react-icons/go";
 import HorizontalStepper from "../components/Stepper";
 import CheckboxInput from "../components/CheckboxInput";
 import stateCityData from "../assets/data/states&city";
+import { useInput } from "../hooks/useInput";
+import validators from "../utils/validators";
+import {useRequiredInput} from '../hooks/useRequieredInput'
 
 export default function Registration() {
   const [step, setStep] = useState(1);
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const {
+    value: enteredEmail,
+    handleInputChange: handleEmailChange,
+    handleInputBlur: handleEmailBlur,
+    hasError: emailError
+  } = useInput("", validators.emailValidator);
+  const {
+    value: enteredPassword,
+    handleInputChange: handlePasswordChange,
+    handleInputBlur: handlePasswordBlur,
+    hasError: passwordError
+  } = useInput("", validators.passwordValidator);
+  const {
+    value: enteredConfirmPassword,
+    handleInputChange: handleConfirmPasswordChange,
+    handleInputBlur: handleConfirmPasswordBlur,
+    hasError: confirmPasswordError
+  } = useInput("", (confirmPassword)=>validators.confirmPasswordValidator(enteredPassword, confirmPassword));
+
+
+  const requiredFieldsDefaultValues = {
+    fullName: "",
+    contactNumber: "",
+    streetName: "",
+    tenthMarks: "",
+    twelthMarks: "",
+  }
+  const requiredFieldsDidEditValues = {
+    fullName: false,
+    contactNumber: false,
+    streetName: false,
+    tenthMarks: false,
+    twelthMarks: false,
+  }
+
+  const {
+    values: enteredRequiredValues,
+    handleInputChange,
+    handleInputBlur,
+    hasErrors
+  } = useRequiredInput(requiredFieldsDefaultValues, requiredFieldsDidEditValues, validators.requiredValidator);
+
 
   const handleStateChange = (e) => {
     setSelectedState(e.target.value);
-    setSelectedCity(''); // Reset city when state changes
+    setSelectedCity(""); // Reset city when state changes
   };
 
   const handleCityChange = (e) => {
@@ -68,7 +113,10 @@ export default function Registration() {
                 id="fullName"
                 label="Full Name"
                 placeholder="Gopi Kumar Shaw"
-                onChange={() => {}}
+                value={enteredRequiredValues.fullName}
+                onChange={(event) => handleInputChange(event, "fullName")}
+                onBlur={()=> handleInputBlur("fullName")}
+                errorMessage={hasErrors.fullName}
                 required
               />
               <Input
@@ -77,7 +125,10 @@ export default function Registration() {
                 id="contactNumber"
                 label="Contact Number"
                 placeholder="98XXXXXXXX"
-                onChange={() => {}}
+                value={enteredRequiredValues.contactNumber}
+                onChange={(event) => handleInputChange(event, "contactNumber")}
+                onBlur={()=> handleInputBlur("contactNumber")}
+                errorMessage={hasErrors.contactNumber}
                 required
                 maxLength={10}
               />
@@ -94,7 +145,10 @@ export default function Registration() {
                 id="streetName"
                 label="Street Name"
                 placeholder="Gandhi Marg"
-                onChange={() => {}}
+                value={enteredRequiredValues.streetName}
+                onChange={(event) => handleInputChange(event, "streetName")}
+                onBlur={()=> handleInputBlur("streetName")}
+                errorMessage={hasErrors.streetName}
                 required
               />
               <Dropdown
@@ -102,19 +156,24 @@ export default function Registration() {
                 options={Object.keys(stateCityData)}
                 value={selectedState}
                 onChange={handleStateChange}
+                required
               />
               <Dropdown
                 label="City"
                 options={selectedState ? stateCityData[selectedState] : []}
                 value={selectedCity}
                 onChange={handleCityChange}
+                required
               />
               <Input
                 name="email"
                 id="email"
                 label="Email"
                 placeholder="gopi123@dummy.com"
-                onChange={() => {}}
+                value={enteredEmail}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
+                errorMessage={emailError}
                 required
               />
               <button
@@ -141,7 +200,10 @@ export default function Registration() {
                 id="tenthMarks"
                 label="10th Marks"
                 placeholder="In Percentage"
-                onChange={() => {}}
+                value={enteredRequiredValues.tenthMarks}
+                onChange={(event) => handleInputChange(event, "tenthMarks")}
+                onBlur={()=> handleInputBlur("tenthMarks")}
+                errorMessage={hasErrors.tenthMarks}
                 required
               />
 
@@ -166,7 +228,10 @@ export default function Registration() {
                 id="twelthMarks"
                 label="12th Marks"
                 placeholder="In Percentage "
-                onChange={() => {}}
+                value={enteredRequiredValues.twelthMarks}
+                onChange={(event) => handleInputChange(event, "twelthMarks")}
+                onBlur={()=> handleInputBlur("twelthMarks")}
+                errorMessage={hasErrors.twelthMarks}
                 required
               />
 
@@ -217,16 +282,22 @@ export default function Registration() {
                 name="password"
                 id="password"
                 label="Password"
-                onChange={() => {}}
+                value={enteredPassword}
+                onChange={handlePasswordChange}
+                onBlur={handlePasswordBlur}
+                errorMessage={passwordError}
                 required
               />
 
               <Input
-                type="confirmPassword"
+                type="password"
                 name="confirmPassword"
                 id="confirmPassword"
                 label="Confirm Password"
-                onChange={() => {}}
+                value={enteredConfirmPassword}
+                onChange={handleConfirmPasswordChange}
+                onBlur={handleConfirmPasswordBlur}
+                errorMessage={confirmPasswordError}
                 required
               />
 

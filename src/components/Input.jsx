@@ -8,6 +8,7 @@ const Input = ({
   id,
   label,
   required = false,
+  errorMessage=null,
   ...rest
 }) => {
   return (
@@ -25,7 +26,7 @@ const Input = ({
             required && (<span className="text-[1.25rem] text-red-500">*</span>)
         }
       </div>
-      <div className="w-1/5">
+      <div className="w-2/5">
         <input
           type={type}
           name={name}
@@ -34,6 +35,11 @@ const Input = ({
           className="input-field border-2 p-1 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           {...rest} // Spread other props like `min`, `max`, `pattern`, etc.
         />
+        {
+          errorMessage && (
+            <p className="w-full text-sm font-medium text-red-400">{errorMessage}</p>
+          )
+        }
       </div>
     </div>
   );
