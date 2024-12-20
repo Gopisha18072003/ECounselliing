@@ -15,7 +15,9 @@ import {useRequiredInput} from '../hooks/useRequieredInput'
 export default function Registration() {
   const [step, setStep] = useState(1);
   const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");  
+  const [selectedBOE10, setSelectedBOE10] = useState("");
+  const [selectedBOE12, setSelectedBOE12] = useState("");
   const {
     value: enteredEmail,
     handleInputChange: handleEmailChange,
@@ -66,12 +68,19 @@ export default function Registration() {
 
   const handleCityChange = (e) => {
     setSelectedCity(e.target.value);
+  };  
+  const handleBOE10Change = (e) => {
+    setSelectedBOE10(e.target.value);
+  };  
+  const handleBOE12Change = (e) => {
+    setSelectedBOE12(e.target.value);
   };
   // Move to Next Step
   const nextStep = () => setStep(step + 1);
 
   // Move to Previous Step
   const prevStep = () => setStep(step - 1);
+
   return (
     <div className="container">
       {/* Header Section */}
@@ -179,7 +188,7 @@ export default function Registration() {
               <button
                 type="button"
                 onClick={nextStep}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -220,6 +229,8 @@ export default function Registration() {
                 id="boardOfEducation10"
                 label="Board of Education"
                 options={boardOptions}
+                value={selectedBOE10}
+                onChange={handleBOE10Change}
                 required
               />
               <div className="h-1 bg-gray-300"></div>
@@ -248,6 +259,8 @@ export default function Registration() {
                 id="boardOfEducation12"
                 label="Board of Education"
                 options={boardOptions}
+                value={selectedBOE12}
+                onChange={handleBOE12Change}
                 required
               />
               <div className="flex justify-between">

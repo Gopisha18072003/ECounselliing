@@ -52,6 +52,18 @@ const validators = {
 
     return validationResult;
   },
+
+  checkError : (validationResults) => {
+        console.log(validationResults)
+        let hasError = false;
+        for (let key in validationResults) {
+            if (validationResults[key]) {
+                hasError = true
+                return hasError
+            }
+        }
+        return hasError
+  }
 };
 
 export default validators;
