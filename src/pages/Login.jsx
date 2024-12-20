@@ -74,6 +74,11 @@ export default function Login(){
                 </button>
               </div>
 
+              <div style={{ textAlign:"center"}}>
+                <a href="#" style={{textDecoration:"underline",color:"blue",fontSize:"15px"}}>
+                  Don't have an account yet, Sign-up
+                </a>
+              </div>
 
             </form>
           </div>
