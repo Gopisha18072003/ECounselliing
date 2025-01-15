@@ -1,68 +1,63 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Input from "../components/Input";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import Input from "../../components/Input";
 import { useState,useActionState } from "react";
-import Dropdown from "../components/DropdownInput";
-import boardOptions from "../assets/data/boardOfEducation";
+import Dropdown from "../../components/DropdownInput";
 import { GoHomeFill } from "react-icons/go";
-import HorizontalStepper from "../components/Stepper";
-import CheckboxInput from "../components/CheckboxInput";
-import stateCityData from "../assets/data/states&city";
-import { useInput } from "../hooks/useInput";
-import validators from "../utils/validators";
-import { useRequiredInput } from "../hooks/useRequieredInput";
-import ImageUpload from "../components/ImageUpload";
+import HorizontalStepper from "../../components/Stepper";
+import CheckboxInput from "../../components/CheckboxInput";
+import stateCityData from "../../assets/data/states&city";
+import { useInput } from "../../hooks/useInput";
+import validators from "../../utils/validators";
+import { useRequiredInput } from "../../hooks/useRequieredInput";
+import ImageUpload from "../../components/ImageUpload";
+import uploadImageToCloudinary from "../../utils/uploadImage";
+import DepartmentFormInput from "../../components/DepartmentFormInput";
 
-export default function Registration() {
+const steps = [
+    'Basic Information',
+    'Deparetment Information',
+    'Password Creation',
+]
+export default function CollegeRegistration() {
   const [step, setStep] = useState(1);
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedBOE10, setSelectedBOE10] = useState("");
-  const [selectedBOE12, setSelectedBOE12] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-
-
-  const uploadImageToCloudinary = async () => {
-    if (!selectedImage) {
-      throw new Error("No image selected for upload.");
-    }
-
-    const uploadData = new FormData();
-    uploadData.append("file", selectedImage);
-    uploadData.append("upload_preset", "E_Counselling");
-    uploadData.append("cloud_name", "dsnqj4rrr");
-
-    try {
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/dsnqj4rrr/image/upload",
-        {
-          method: "POST",
-          body: uploadData,
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to upload image");
-      }
-      const data = await response.json();
-      return data.secure_url;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
-
+  const [departments, setDepartments] = useState([]);
+  function handleAddDepartment({departmentName, noOfSeats, cutoffRank}) {
+    setDepartments([...departments, {
+      departmentName,
+      noOfSeats,
+      cutoffRank
+    }])
+  }
   async function signupAction(prev,formData) {
     try{
       // Step 1: Upload the image to Cloudinary
-      const uploadedImageUrl = await uploadImageToCloudinary();
+      const uploadedImageUrl = await uploadImageToCloudinary(selectedImage);
 
       // Step 2: Add Cloudinary URL to the form data
 
       const completeFormData = {
         ...Object.fromEntries(formData.entries()),
-        imageUrl: uploadedImageUrl,
+        logo: uploadedImageUrl,
+        departments,
       };
-      console.log(completeFormData);
+      
+      const collegeRegistrationData = {
+        collegeName: completeFormData.collegeName,
+        contactNumber: completeFormData.contactNumber,
+        nirfRank: completeFormData.nirfRank,
+        email: completeFormData.email,
+        logo: completeFormData.logo,
+        password: completeFormData.password,
+        confirmPassword: completeFormData.confirmPassword,
+        departments: completeFormData.departments,
+        address: `${completeFormData.houseNumber} ${completeFormData.streetName}, ${selectedCity}, ${selectedState}`
+      }
+    console.log(collegeRegistrationData);
 
       // // Step 3: Send form data to the backend
       // const response = await fetch("your_api_endpoint", {
@@ -88,10 +83,6 @@ export default function Registration() {
     }
   };
 
-  
-
-  
-
   const {
     value: enteredEmail,
     handleInputChange: handleEmailChange,
@@ -114,18 +105,16 @@ export default function Registration() {
   );
 
   const requiredFieldsDefaultValues = {
-    fullName: "",
+    collegeName: "",
     contactNumber: "",
     streetName: "",
-    tenthMarks: "",
-    twelthMarks: "",
+    nirfRank: "",
   };
   const requiredFieldsDidEditValues = {
     fullName: false,
     contactNumber: false,
     streetName: false,
-    tenthMarks: false,
-    twelthMarks: false,
+    nirfRank: false,
   };
 
   const {
@@ -147,12 +136,7 @@ export default function Registration() {
   const handleCityChange = (e) => {
     setSelectedCity(e.target.value);
   };
-  const handleBOE10Change = (e) => {
-    setSelectedBOE10(e.target.value);
-  };
-  const handleBOE12Change = (e) => {
-    setSelectedBOE12(e.target.value);
-  };
+
   // Move to Next Step
   const nextStep = () => setStep(step + 1);
 
@@ -182,9 +166,9 @@ export default function Registration() {
       <div className="min-h-screen  flex items-center justify-center bg-gray-100">
         <div className="bg-white shadow-md rounded-lg p-8 w-2/5 my-12">
           <h1 className="text-h3 font-bold text-center mb-6 uppercase">
-            Registration Of New Candidate
+            Registration Of New College
           </h1>
-          <HorizontalStepper activeStep={step - 1} />
+          <HorizontalStepper activeStep={step - 1} steps={steps} />
           <div className="h-[2rem]"></div>
           <form action={formAction}>
             <div
@@ -200,14 +184,14 @@ export default function Registration() {
               </h2> */}
               {/* Inputs */}
               <Input
-                name="fullName"
-                id="fullName"
-                label="Full Name"
-                placeholder="Gopi Kumar Shaw"
-                value={enteredRequiredValues.fullName}
-                onChange={(event) => handleInputChange(event, "fullName")}
-                onBlur={() => handleInputBlur("fullName")}
-                errorMessage={hasErrors.fullName}
+                name="collegeName"
+                id="collegeName"
+                label="College Name"
+                placeholder="ABC Institute of Technology"
+                value={enteredRequiredValues.collegeName}
+                onChange={(event) => handleInputChange(event, "collegeName")}
+                onBlur={() => handleInputBlur("collegeName")}
+                errorMessage={hasErrors.collegeName}
                 required
               />
               <Input
@@ -260,12 +244,24 @@ export default function Registration() {
                 name="email"
                 id="email"
                 label="Email"
-                placeholder="gopi123@dummy.com"
+                placeholder="abc.institute121@gmail.com"
                 value={enteredEmail}
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
                 errorMessage={emailError}
                 required
+              />
+              <Input
+                type="number"
+                name="nirfRank"
+                id="nirfRank"
+                label="NIRF Rank"
+                value={enteredRequiredValues.nirfRank}
+                onChange={(event) => handleInputChange(event, "nirfRank")}
+                onBlur={() => handleInputBlur("nirfRank")}
+                errorMessage={hasErrors.nirfRank}
+                required
+                maxLength={5}
               />
               <button
                 type="button"
@@ -275,86 +271,14 @@ export default function Registration() {
                 Next
               </button>
             </div>
-
             <div
               className={`transition-transform duration-500 ease-in-out ${
                 step === 2 ? " flex flex-col gap-4 " : "hidden"
               }`}
             >
-              {/* Step 2: Academic Information */}
-              {/* <h2 className="text-xl font-semibold mb-4">
-                Step 2: Academic Information
-              </h2> */}
-              <Input
-                type="number"
-                name="tenthMarks"
-                id="tenthMarks"
-                label="10th Marks"
-                placeholder="In Percentage"
-                value={enteredRequiredValues.tenthMarks}
-                onChange={(event) => handleInputChange(event, "tenthMarks")}
-                onBlur={() => handleInputBlur("tenthMarks")}
-                errorMessage={hasErrors.tenthMarks}
-                required
-              />
-
-              <Input
-                type="number"
-                name="passingYear10"
-                id="passingYear10"
-                label="Year of Passing"
-                
-                onChange={() => {}}
-              />
-              <Dropdown
-                name="boardOfEducation10"
-                id="boardOfEducation10"
-                label="Board of Education"
-                options={boardOptions}
-                value={selectedBOE10}
-                onChange={handleBOE10Change}
-                required
-              />
-              <div className="h-1 bg-gray-300"></div>
-              <Input
-                name="twelthMarks"
-                id="twelthMarks"
-                label="12th Marks"
-                placeholder="In Percentage "
-                value={enteredRequiredValues.twelthMarks}
-                onChange={(event) => handleInputChange(event, "twelthMarks")}
-                onBlur={() => handleInputBlur("twelthMarks")}
-                errorMessage={hasErrors.twelthMarks}
-                required
-              />
-
-              <Input
-                type="number"
-                name="passingYear12"
-                id="passingYear12"
-                label="Year of Passing"
-                
-                onChange={() => {}}
-              />
-              <Dropdown
-                name="boardOfEducation12"
-                id="boardOfEducation12"
-                label="Board of Education"
-                options={boardOptions}
-                value={selectedBOE12}
-                onChange={handleBOE12Change}
-                required
-              />
-              <div className="h-1 bg-gray-300"></div>
-              <Input
-                type="number"
-                name="erank"
-                id="erank"
-                label="Rank"
-                required
-                onChange={() => {}}
-              />
-              <div className="flex justify-between">
+              <DepartmentFormInput  departments={departments} setDepartments={handleAddDepartment}/>
+              
+              <div className="flex justify-between mt-8 border-t-4 border-slate-100 pt-2">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -371,7 +295,7 @@ export default function Registration() {
                 </button>
               </div>
             </div>
-
+        
             <div
               className={`transition-transform duration-500 ease-in-out ${
                 step === 3 ? " flex flex-col gap-4 " : "hidden"

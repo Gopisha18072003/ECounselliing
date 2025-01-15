@@ -1,11 +1,11 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Input from "../components/Input";
-import { useInput } from "../hooks/useInput";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import Input from "../../components/Input";
+import { useInput } from "../../hooks/useInput";
 import { GoHomeFill } from "react-icons/go";
-import validators from "../utils/validators";
+import validators from "../../utils/validators";
 
-export default function Login() {
+export default function StudentLogin() {
   const {
     value: enteredEmail,
     handleInputChange: handleEmailChange,

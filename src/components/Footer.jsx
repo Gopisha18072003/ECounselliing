@@ -42,7 +42,7 @@ const Footer = () => {
         <p>
           Content Owned and Maintained by{" "}
           <span className="font-semibold">
-            West Bengal Joint Entrance Examinations Board.
+            Engineering Entrance Examinations Board.
           </span>
         </p>
         <p>

@@ -12,7 +12,7 @@ const Input = ({
   ...rest
 }) => {
   return (
-    <div className="input-group flex justify-start gap-[2rem] items-center w-full">
+    <div className="input-group flex justify-center gap-[2rem] items-center w-full">
       <div className="w-2/5 flex gap-1">
         {label && (
           <label
@@ -26,13 +26,13 @@ const Input = ({
             required && (<span className="text-[1.25rem] text-red-500">*</span>)
         }
       </div>
-      <div className="w-2/5">
+      <div className="w-[3/5]">
         <input
           type={type}
           name={name}
           id={id || name}
           required={required}
-          className="input-field border-2 p-1 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input-field border-2 p-1 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
           {...rest} // Spread other props like `min`, `max`, `pattern`, etc.
         />
         {

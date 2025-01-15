@@ -35,6 +35,7 @@ export default function ImageUpload({ label, onImageChange, previewImage }) {
       <button
         onClick={() => fileInputRef.current.click()}
         className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md text-p font-medium"
+        type="button"
       >
         Pick Image
       </button>
