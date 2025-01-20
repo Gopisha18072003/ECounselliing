@@ -28,7 +28,7 @@ export default function AcademicInformation() {
         />
         <Input
           label="12th Board"
-          name="twelthboard"
+          name="twelfthboard"
           value={user.twelfthboard}
           disabled={true}
         />
