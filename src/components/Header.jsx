@@ -1,8 +1,14 @@
 import wbjee_logo from "../assets/images/logo.png";
 import eCounsellingLogo from "../assets/images/e-counselling.png";
+import SuccessNotification from "./successNotification";
+import ErrorNotification from "./ErrorNotification";
+import { useSelector } from "react-redux";
 export default function Header() {
     const year = new Date().getFullYear();
+    const successNotification = useSelector((state) => state.ui.successNotification)
+    const errorNotification = useSelector((state) => state.ui.errorNotification)
   return (
+    <>
     <header className="header flex justify-between items-center h-[12rem] w-full px-[1rem] ">
       <div className="w-1/4 h-full flex items-center">
         <img
@@ -23,5 +29,13 @@ export default function Header() {
         <img src={eCounsellingLogo} alt="e-Counselling Services Logo" />
       </div>
     </header>
+    {
+      successNotification && <SuccessNotification message={successNotification.message} />
+    }
+    {
+      errorNotification && <ErrorNotification message={errorNotification.message} />
+    }
+    
+    </>
   );
 }

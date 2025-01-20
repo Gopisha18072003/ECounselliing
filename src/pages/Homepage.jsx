@@ -1,17 +1,28 @@
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import NavigationBar from "../components/NavigationBar";
-
+import Authentication from "../components/Authentication";
+import { useSelector } from 'react-redux';
 export default function Homepage() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
     <div>
-      <Header />
-      <NavigationBar />
+      {
+        !isAuthenticated && <Authentication />
+      }
+      
       <main className="main flex gap-8 h-[32rem] mx-4 my-6">
         <div className="sidebar w-[30%] bg-gray-200 rounded-md">
           <h1 className="w-full p-2 text-lg font-bold text-center border-b-2 border-gray-300">
             Notices
           </h1>
+          <div>
+            <ul className="p-2 flex flex-col gap-2">
+              <li className="w-full h-[62px] bg-blue-300 rounded-md"></li>
+              <li className="w-full h-[62px] bg-blue-300 rounded-md"></li>
+              <li className="w-full h-[62px] bg-blue-300 rounded-md"></li>
+              <li className="w-full h-[62px] bg-blue-300 rounded-md"></li>
+              <li className="w-full h-[62px] bg-blue-300 rounded-md"></li>
+              
+            </ul>
+          </div>
         </div>
         <div className="main-content w-[70%] bg-gray-200 rounded-md p-2">
           <div className="">
@@ -32,7 +43,6 @@ export default function Homepage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

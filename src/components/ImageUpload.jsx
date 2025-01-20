@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import dummyImage from "../assets/images/dummy.png";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 export default function ImageUpload({ label, onImageChange, previewImage }) {
   const fileInputRef = useRef(null);
   return (
@@ -37,7 +38,7 @@ export default function ImageUpload({ label, onImageChange, previewImage }) {
         className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md text-p font-medium"
         type="button"
       >
-        Pick Image
+       <CloudUploadIcon /> Upload Image
       </button>
     </div>
   );

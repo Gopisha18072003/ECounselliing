@@ -4,13 +4,12 @@ import validators from "../../utils/validators";
 import { Link } from "react-router-dom";
 import { useActionState } from "react";
 import { useDispatch } from "react-redux";
-import { loginStudent } from "../../utils/http";
+import { loginAdmin } from "../../utils/http";
 import { uiActions } from "../../store/uiSlice";
 import { authActions } from "../../store/authSlice";
 import CircularProgress from "@mui/material/CircularProgress";
-import { studentResponse } from "../../assets/data/DUMMY_DATA";
 import { useNavigate } from "react-router-dom";
-export default function StudentLogin() {
+export default function AdminLogin() {
   const {
     value: enteredEmail,
     handleInputChange: handleEmailChange,
@@ -30,14 +29,14 @@ export default function StudentLogin() {
 
   async function loginAction(prev, formData) {
     const enteredData = {
-      mailId: formData.get("email"),
+      userId: formData.get("email"),
       password: formData.get("password"),
     };
 
     try {
       // Attempt to log the user in
       // console.log(enteredData);
-      const response = await loginStudent(enteredData);
+      const response = await loginAdmin(enteredData);
 
       // Handle successful login
       if (response.statusCode === 200) {
@@ -80,7 +79,7 @@ export default function StudentLogin() {
       <div className="min-h-screen  flex items-center justify-center bg-gray-100 w-full">
         <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem]">
           <h1 className="text-h3 font-bold text-center mb-6 uppercase">
-            Sign-In for Candidates
+            Sign-In for Administrator
           </h1>
 
           <div className="h-[2rem]"></div>
@@ -129,16 +128,6 @@ export default function StudentLogin() {
               </button>
             </div>
           </form>
-          <span className="block text-center w-full mt-2 text-sm">
-            Don't have account?
-            <Link
-              to="/register/student"
-              className="cursor-pointer hover:text-blue-500"
-            >
-              {" "}
-              Register
-            </Link>
-          </span>
         </div>
         <div className="w-2/5 bg-blue-500 text-white rounded-r-lg  h-[24rem] p-4 flex flex-col gap-2">
           <h2 className="text-h3">Important Instructions</h2>

@@ -4,13 +4,58 @@ import StudentLogin from './pages/student/Login'
 import CollegeLogin from './pages/college/Login'
 import CollegeRegistration from './pages/college/Registration'
 import Homepage from './pages/Homepage';
-function App() {
+import AdminDashboard from './pages/administration/Dashboard'
+import RootLayout from './components/RootLayout'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from './store'
+import Errorpage from './pages/Errorpage';
+import DashboardPage from './pages/Dashboard';
+import AdminLogin from './pages/administration/Login'
 
+
+function App() {
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    errorElement: <Errorpage/>,
+    children: [
+      {
+        path: '/',
+        element: <Homepage />
+      },
+      {
+        path: '/register/college',
+        element: <CollegeRegistration />
+      },
+      {
+        path: '/register/student',
+        element: <StudentRegistration />
+      },
+      {
+        path: '/login/college',
+        element:<CollegeLogin/>
+      },
+      {
+        path: '/login/student',
+        element:<StudentLogin/>
+      },
+      {
+        path: '/dashboard',
+        element: <DashboardPage/>
+      },
+      {
+        path: '/login/admin',
+        element: <AdminLogin />
+      }
+    ]
+  }
+])
   return (
-    <>
-      <Homepage />
-  
-    </>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   )
 }
 

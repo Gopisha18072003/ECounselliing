@@ -1,10 +1,15 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import Input from "../../components/Input";
 import { useInput } from "../../hooks/useInput";
-import { GoHomeFill } from "react-icons/go";
 import validators from "../../utils/validators";
-
+import { Link } from "react-router-dom";
+import { useActionState } from "react";
+import { useDispatch } from "react-redux";
+import { loginCollege } from "../../utils/http";
+import { uiActions } from "../../store/uiSlice";
+import { authActions } from "../../store/authSlice";
+import CircularProgress from "@mui/material/CircularProgress";
+import { collegeResponse } from "../../assets/data/DUMMY_DATA";
+import { useNavigate } from "react-router-dom";
 export default function CollegeLogin() {
   const {
     value: enteredEmail,
@@ -18,49 +23,78 @@ export default function CollegeLogin() {
     handleInputBlur: handlePasswordBlur,
     hasError: passwordError,
   } = useInput("", validators.passwordValidator);
+  const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+  async function loginAction(prev, formData) {
+    const enteredData = {
+      mailId: formData.get("email"),
+      password: formData.get("password"),
+    };
+
+    try {
+      // Attempt to log the user in
+      // console.log(enteredData);
+      const response = await loginCollege(enteredData);
+
+      // Handle successful login
+      if (response.statusCode === 200) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        dispatch(
+          uiActions.showSuccessNotification({
+            status: "success",
+            message: [response.message],
+          })
+        );
+        dispatch(authActions.login(response.data)); // Store user data after login
+        navigate("/dashboard"); // Redirect to homepage after successful login
+      } else {
+        dispatch(
+          uiActions.showErrorNotification({
+            status: "fail",
+            message: [response.message],
+          })
+        );
+      }
+
+      return { errors: null };
+    } catch (error) {
+      // Handle error and show error notification
+      dispatch(
+        uiActions.showErrorNotification({
+          status: "fail",
+          message: [error.message],
+        })
+      );
+      return { errors: error.message };
+    }
+  }
+  const [formState, formAction, isPending] = useActionState(loginAction, {
+    errors: null,
+  });
   return (
     <div className="container">
-      {/* Header Section */}
-      <Header />
-
-      {/*Nav Bar*/}
-      <nav className="h-[2.5rem] w-full bg-blue-500 text-white text-p py-1 px-[1rem]">
-        <ul>
-          <li>
-            <a className="flex items-center cursor-pointer" href="#">
-              <GoHomeFill />
-              <span className="text-p font-semibold">Home</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-
       {/* Main Content */}
       <div className="min-h-screen  flex items-center justify-center bg-gray-100 w-full">
         <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem]">
           <h1 className="text-h3 font-bold text-center mb-6 uppercase">
-            Sign-In for Candidates
+            Sign-In for Colleges
           </h1>
 
           <div className="h-[2rem]"></div>
 
-          <form>
-            <div className={`transition-transform duration-500 ease-in-out flex flex-col gap-4`}>
+          <form action={formAction}>
+            <div
+              className={`transition-transform duration-500 ease-in-out flex flex-col gap-4`}
+            >
               {/* Login Credentials */}
               {/* Inputs */}
-              <Input
-                name="applicationId"
-                id="applicationId"
-                label="Application ID"
-                onChange={() => {}}
-                required
-              />
+
               <Input
                 name="email"
                 id="email"
                 label="Email"
-                placeholder="gopi123@dummy.com"
+                placeholder="abc.college123@dummy.com"
                 value={enteredEmail}
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
@@ -80,20 +114,24 @@ export default function CollegeLogin() {
               />
 
               <button
-                type="button"
+                type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed"
-                disabled = {emailError || passwordError}
+                disabled={emailError || passwordError}
               >
-                Sign-In
+                {isPending && <CircularProgress color="white" size="1.5rem" />}
+                {!isPending && <span>Sign-in</span>}
               </button>
             </div>
           </form>
           <span className="block text-center w-full mt-2 text-sm">
             Don't have account?
-            <a href="#" className="cursor-pointer hover:text-blue-500">
+            <Link
+              to="/register/college"
+              className="cursor-pointer hover:text-blue-500"
+            >
               {" "}
               Register
-            </a>
+            </Link>
           </span>
         </div>
         <div className="w-2/5 bg-blue-500 text-white rounded-r-lg  h-[24rem] p-4 flex flex-col gap-2">
@@ -124,8 +162,6 @@ export default function CollegeLogin() {
           </ul>
         </div>
       </div>
-      {/* Footer Section */}
-      <Footer />
     </div>
   );
 }

@@ -1,20 +1,24 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+
 import Input from "../../components/Input";
-import { useState,useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import Dropdown from "../../components/DropdownInput";
 import boardOptions from "../../assets/data/boardOfEducation";
-import { GoHomeFill } from "react-icons/go";
 import HorizontalStepper from "../../components/Stepper";
-import CheckboxInput from "../../components/CheckboxInput";
 import stateCityData from "../../assets/data/states&city";
 import { useInput } from "../../hooks/useInput";
 import validators from "../../utils/validators";
 import { useRequiredInput } from "../../hooks/useRequieredInput";
 import ImageUpload from "../../components/ImageUpload";
 import uploadImageToCloudinary from "../../utils/uploadImage";
+import CustomCheckbox from "../../components/CustomCheckbox";
+import { registerStudent } from "../../utils/http";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/authSlice";
+import { uiActions } from "../../store/uiSlice";
+import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function CollegeRegistration() {
+export default function StudentRegistration() {
   const [step, setStep] = useState(1);
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
@@ -22,54 +26,65 @@ export default function CollegeRegistration() {
   const [selectedBOE12, setSelectedBOE12] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [aggremant, setAggremant] = useState({
+    verified: false,
+    correct: false,
+  });
 
   const steps = [
-    'Personal Information',
-    'Academics Information',
-    'Password Creation',
+    "Personal Information",
+    "Academics Information",
+    "Password Creation",
   ];
 
-  async function signupAction(prev,formData) {
-    try{
-      // Step 1: Upload the image to Cloudinary
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  async function signupAction(prev, formData) {
+    const enteredData = {
+      studentName: formData.get("fullName"),
+      contactNumber: formData.get("contactNumber"),
+      address: `${formData.get("houseNumber")} ${formData.get("streetName")}, ${selectedCity}, ${selectedState}`,
+      schoolName: formData.get("schoolName"),
+      mailId: formData.get("email"),
+      tenthMarks: formData.get("tenthMarks"),
+      twelveMarks: formData.get("twelthMarks"),
+      erank: formData.get("erank"),
+      password: formData.get("password"),
+      tenthboard: selectedBOE10,
+      twelfthboard: selectedBOE12,
+
+    }
+    try {
+      // If no errors, proceed with image upload and form submission
       const uploadedImageUrl = await uploadImageToCloudinary(selectedImage);
 
-      // Step 2: Add Cloudinary URL to the form data
-
       const completeFormData = {
-        ...Object.fromEntries(formData.entries()),
-        imageUrl: uploadedImageUrl,
+        ...enteredData,
+        img: uploadedImageUrl,
       };
-      const studentRegistrationData = {
-        studentName: completeFormData.fullName,
-        contactNumber: completeFormData.contactNumber,
-        email: completeFormData.email,
-        image: selectedImage,
-        password: completeFormData.password,
-        confirmPassword: completeFormData.confirmPassword,
-        erank: completeFormData.erank,
-        tenthMarks: completeFormData.tenthMarks,
-        twelthMarks: completeFormData.twelthMarks,
-        tenthBoard: completeFormData.boardOfEducation10,
-        twelthBoard: completeFormData.boardOfEducation12,
-        address: `${completeFormData.houseNumber} ${completeFormData.streetName}, ${selectedCity}, ${selectedState}`
+
+      const response = await registerStudent(completeFormData)
+      console.log(response)
+      
+      // Email already exits
+      if(response.statusCode == 201) {
+        dispatch(uiActions.showSuccessNotification({status: "success", message: [response.message]}));
+        dispatch(authActions.login(response.data));
+        localStorage.setItem('user', JSON.stringify(response.data));
+        navigate('/dashboard');
+      }else {
+        dispatch(uiActions.showErrorNotification({status: "fail", message: [response.message]}));
       }
-      console.log(studentRegistrationData);
+      return { errors: null };
+    } catch (error) {
+        dispatch(uiActions.showErrorNotification({status: "fail", message: [error.message]}));
+    }
+  }
 
-      // // Step 3: Send form data to the backend
-      // const response = await fetch("your_api_endpoint", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(completeFormData),
-      // });
-
-    }catch(error){
-      console.error("Error uploading image:", error);
-    } 
-  };
-  const [formState, formAction, isPending] = useActionState(signupAction, {});
+  const [formState, formAction, isPending] = useActionState(signupAction, {
+    errors: null,
+  });
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -80,7 +95,9 @@ export default function CollegeRegistration() {
     }
   };
 
-
+  {
+    /* Email, Password and Confirm Password Handlers */
+  }
   const {
     value: enteredEmail,
     handleInputChange: handleEmailChange,
@@ -108,6 +125,8 @@ export default function CollegeRegistration() {
     streetName: "",
     tenthMarks: "",
     twelthMarks: "",
+    erank: "",
+    schoolName: ""
   };
   const requiredFieldsDidEditValues = {
     fullName: false,
@@ -115,6 +134,8 @@ export default function CollegeRegistration() {
     streetName: false,
     tenthMarks: false,
     twelthMarks: false,
+    erank: false,
+    schoolName: false,
   };
 
   const {
@@ -148,24 +169,8 @@ export default function CollegeRegistration() {
   // Move to Previous Step
   const prevStep = () => setStep(step - 1);
 
-
-
   return (
     <div className="container">
-      {/* Header Section */}
-      <Header />
-
-      {/*Nav Bar*/}
-      <nav className="h-[2.5rem] w-full bg-blue-500 text-white text-p py-1 px-[1rem]">
-        <ul>
-          <li>
-            <a className="flex items-center cursor-pointer" href="#">
-              <GoHomeFill />
-              <span className="text-p font-semibold">Home</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
 
       {/* Main Content */}
       <div className="min-h-screen  flex items-center justify-center bg-gray-100">
@@ -173,7 +178,7 @@ export default function CollegeRegistration() {
           <h1 className="text-h3 font-bold text-center mb-6 uppercase">
             Registration Of New Candidate
           </h1>
-          <HorizontalStepper activeStep={step - 1} steps={steps}/>
+          <HorizontalStepper activeStep={step - 1} steps={steps} />
           <div className="h-[2rem]"></div>
           <form action={formAction}>
             <div
@@ -182,7 +187,10 @@ export default function CollegeRegistration() {
               }`}
             >
               {/* Image Picker */}
-              <ImageUpload onImageChange={handleImageChange} previewImage={imagePreview} />
+              <ImageUpload
+                onImageChange={handleImageChange}
+                previewImage={imagePreview}
+              />
               {/* Step 1: Personal Information */}
               {/* <h2 className="text-h4 font-semibold mb-4">
                 Step 1: Personal Information
@@ -259,7 +267,20 @@ export default function CollegeRegistration() {
               <button
                 type="button"
                 onClick={nextStep}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed disabled:bg-gray-500"
+                disabled={
+                  hasErrors.fullName ||
+                  hasErrors.contactNumber ||
+                  hasErrors.streetName ||
+                  hasErrors.email ||
+                  !selectedCity ||
+                  !selectedState ||
+                  !selectedImage ||
+                  enteredRequiredValues.contactNumber.length !== 10 ||
+                  enteredRequiredValues.fullName.length < 3 ||
+                  enteredRequiredValues.streetName.length < 3
+                  
+                }
               >
                 Next
               </button>
@@ -292,7 +313,6 @@ export default function CollegeRegistration() {
                 name="passingYear10"
                 id="passingYear10"
                 label="Year of Passing"
-                
                 onChange={() => {}}
               />
               <Dropdown
@@ -322,7 +342,6 @@ export default function CollegeRegistration() {
                 name="passingYear12"
                 id="passingYear12"
                 label="Year of Passing"
-                
                 onChange={() => {}}
               />
               <Dropdown
@@ -341,7 +360,21 @@ export default function CollegeRegistration() {
                 id="erank"
                 label="Rank"
                 required
-                onChange={() => {}}
+                value={enteredRequiredValues.erank}
+                onChange={(event) => handleInputChange(event, "erank")}
+                onBlur={() => handleInputBlur("erank")}
+                errorMessage={hasErrors.erank}
+              />
+              <Input
+                
+                name="schoolName"
+                id="schoolName"
+                label="School Name"
+                required
+                value={enteredRequiredValues.schoolName}
+                onChange={(event) => handleInputChange(event, "schoolName")}
+                onBlur={() => handleInputBlur("schoolName")}
+                errorMessage={hasErrors.schoolName}
               />
               <div className="flex justify-between">
                 <button
@@ -354,7 +387,22 @@ export default function CollegeRegistration() {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="bg-blue-500 text-white text-p px-4 py-2 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white text-p px-4 py-2 rounded hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-500"
+                  disabled={
+                    hasErrors.tenthMarks ||
+                    hasErrors.twelthMarks ||
+                    hasErrors.erank ||
+                    !selectedBOE10 ||
+                    !selectedBOE12 ||
+                    enteredRequiredValues.tenthMarks < 0  ||
+                    enteredRequiredValues.tenthMarks > 100 ||
+                    enteredRequiredValues.twelthMarks < 0 ||
+                    enteredRequiredValues.twelthMarks > 100 ||
+                    enteredRequiredValues.erank < 0 ||
+                    !enteredRequiredValues.erank ||
+                    !enteredRequiredValues.schoolName
+
+                  }
                 >
                   Next
                 </button>
@@ -410,8 +458,16 @@ export default function CollegeRegistration() {
               </div>
 
               <div className="h-1 bg-gray-300"></div>
-              <CheckboxInput label="Verified all the informations (You will not able to change it later)" />
-              <CheckboxInput label="All the informations provided by you are correct" />
+              <CustomCheckbox
+                label="Verified all the informations (You will not able to change it later)"
+                onChange={() =>{setAggremant((prev) => ({ ...prev, verified: !prev.verified }));}}
+                name="verified"
+              />
+              <CustomCheckbox 
+                label="All the informations provided by you are correct"
+                onChange={() =>{setAggremant((prev) => ({ ...prev, correct: !prev.correct }));}}
+                name="correct"
+              />
               <div className="flex justify-between">
                 <button
                   type="button"
@@ -420,19 +476,33 @@ export default function CollegeRegistration() {
                 >
                   Back
                 </button>
+
                 <button
                   type="submit"
-                  className="bg-green-500 text-white text-p px-4 py-2 rounded hover:bg-green-600"
+                  className="bg-green-500 text-white text-p px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-500 disabled:cursor-not-allowed flex justify-center items-center w-[6rem]"
+                  disabled={
+                    passwordError ||
+                    confirmPasswordError ||
+                    !enteredPassword ||
+                    !enteredConfirmPassword ||
+                    aggremant.verified === false ||
+                    aggremant.correct === false
+                  }
                 >
-                  Submit
+                  {
+                    isPending && <CircularProgress size="1.5rem" color="white" />
+                  }
+                  {
+                    !isPending && <span>Submit</span>
+                  }
+                  
                 </button>
               </div>
             </div>
           </form>
         </div>
       </div>
-      {/* Footer Section */}
-      <Footer />
+
     </div>
   );
 }

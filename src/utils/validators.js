@@ -42,14 +42,15 @@ const validators = {
 
   requiredValidator: (fieldValues, didEditValues) => {
     const validationResult = {};
-
+  
     for (let key in fieldValues) {
       if (Object.hasOwn(fieldValues, key)) {
+        const value = fieldValues[key]?.trim(); // Trim the value to remove extra spaces
         validationResult[key] =
-          !fieldValues[key] && didEditValues[key]  ? "This field is required" : null;
+          (!value && didEditValues[key]) ? "This field is required" : null;
       }
     }
-
+  
     return validationResult;
   },
 
