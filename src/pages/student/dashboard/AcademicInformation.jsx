@@ -29,7 +29,7 @@ export default function AcademicInformation() {
         <Input
           label="12th Board"
           name="twelthboard"
-          value={user.twelthboard}
+          value={user.twelfthboard}
           disabled={true}
         />
         <Input
