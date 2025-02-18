@@ -52,7 +52,7 @@ export default function CollegeLogin() {
         dispatch(
           uiActions.showErrorNotification({
             status: "fail",
-            message: [response.message],
+            message: ["Invalid email or password"],
           })
         );
       }
@@ -63,7 +63,7 @@ export default function CollegeLogin() {
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
-          message: [error.message],
+          message: ["Invalid email or password"],
         })
       );
       return { errors: error.message };
@@ -118,7 +118,7 @@ export default function CollegeLogin() {
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed"
                 disabled={emailError || passwordError}
               >
-                {isPending && <CircularProgress color="white" size="1.5rem" />}
+                {isPending && <CircularProgress color="white" size="1.3rem" />}
                 {!isPending && <span>Sign-in</span>}
               </button>
             </div>

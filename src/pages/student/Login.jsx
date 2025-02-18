@@ -2,14 +2,19 @@ import Input from "../../components/Input";
 import { useInput } from "../../hooks/useInput";
 import validators from "../../utils/validators";
 import { Link } from "react-router-dom";
-import { useActionState } from "react";
-import { useDispatch } from "react-redux";
-import { loginStudent } from "../../utils/http";
+import { useActionState, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import RequestOtpForm from "./resetPassword/RequestOtpForm";
+import {
+  loginStudent,
+} from "../../utils/http";
 import { uiActions } from "../../store/uiSlice";
 import { authActions } from "../../store/authSlice";
 import CircularProgress from "@mui/material/CircularProgress";
-import { studentResponse } from "../../assets/data/DUMMY_DATA";
 import { useNavigate } from "react-router-dom";
+import ValidateOtpForm from "./resetPassword/ValidateOtpForm";
+import ResetPasswordForm from "./resetPassword/ResetPasswordForm";
+
 export default function StudentLogin() {
   const {
     value: enteredEmail,
@@ -41,7 +46,7 @@ export default function StudentLogin() {
 
       // Handle successful login
       if (response.statusCode === 200) {
-        localStorage.setItem('user', JSON.stringify(response.data));
+        localStorage.setItem("user", JSON.stringify(response.data));
         dispatch(
           uiActions.showSuccessNotification({
             status: "success",
@@ -54,7 +59,7 @@ export default function StudentLogin() {
         dispatch(
           uiActions.showErrorNotification({
             status: "fail",
-            message: [response.message],
+            message: ["Invalid Email or Password"],
           })
         );
       }
@@ -65,81 +70,94 @@ export default function StudentLogin() {
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
-          message: [error.message],
+          message: ["Invalid Email or Password"],
         })
       );
       return { errors: error.message };
     }
   }
-  const [formState, formAction, isPending] = useActionState(loginAction, {
-    errors: null,
-  });
+
+
+
+  const [formState, formAction, isPending] = useActionState(loginAction);
   return (
     <div className="container">
       {/* Main Content */}
       <div className="min-h-screen  flex items-center justify-center bg-gray-100 w-full">
-        <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem]">
-          <h1 className="text-h3 font-bold text-center mb-6 uppercase">
-            Sign-In for Candidates
-          </h1>
+          <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem]">
+            <h1 className="text-h3 font-bold text-center mb-6 uppercase">
+              Sign-In for Candidates
+            </h1>
 
-          <div className="h-[2rem]"></div>
+            <div className="h-[2rem]"></div>
 
-          <form action={formAction}>
-            <div
-              className={`transition-transform duration-500 ease-in-out flex flex-col gap-4`}
-            >
-              {/* Login Credentials */}
-              {/* Inputs */}
-              <Input
-                name="email"
-                id="email"
-                label="Email"
-                placeholder="gopi123@dummy.com"
-                value={enteredEmail}
-                onChange={handleEmailChange}
-                onBlur={handleEmailBlur}
-                errorMessage={emailError}
-                required
-              />
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                label="Password"
-                value={enteredPassword}
-                onChange={handlePasswordChange}
-                onBlur={handlePasswordBlur}
-                errorMessage={passwordError}
-                required
-              />
-
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed disabled:bg-gray-500 flex items-center justify-center"
-                disabled={
-                  emailError ||
-                  passwordError ||
-                  !enteredEmail ||
-                  !enteredPassword
-                }
+            <form action={formAction}>
+              <div
+                className={`transition-transform duration-500 ease-in-out flex flex-col gap-4`}
               >
-                {isPending && <CircularProgress color="white" size="1.5rem" />}
-                {!isPending && <span>Sign-in</span>}
-              </button>
-            </div>
-          </form>
-          <span className="block text-center w-full mt-2 text-sm">
-            Don't have account?
-            <Link
-              to="/register/student"
-              className="cursor-pointer hover:text-blue-500"
-            >
-              {" "}
-              Register
-            </Link>
-          </span>
-        </div>
+                {/* Login Credentials */}
+                {/* Inputs */}
+                <Input
+                  name="email"
+                  id="email"
+                  label="Email"
+                  placeholder="gopi123@dummy.com"
+                  value={enteredEmail}
+                  onChange={handleEmailChange}
+                  onBlur={handleEmailBlur}
+                  errorMessage={emailError}
+                  required
+                />
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  label="Password"
+                  value={enteredPassword}
+                  onChange={handlePasswordChange}
+                  onBlur={handlePasswordBlur}
+                  errorMessage={passwordError}
+                  required
+                />
+                <button
+                  className="w-full text-end text-[14px] font-semibold text-gray-500 hover:text-gray-600"
+                  type="button"
+                  onClick={() => navigate('/student/forgot-password')}
+                >
+                  Forgot Password
+                </button>
+
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed disabled:bg-gray-500 flex items-center justify-center"
+                  disabled={
+                    emailError ||
+                    passwordError ||
+                    !enteredEmail ||
+                    !enteredPassword
+                  }
+                >
+                  {isPending && (
+                    <CircularProgress color="white" size="1.5rem" />
+                  )}
+                  {!isPending && <span>Sign-in</span>}
+                </button>
+              </div>
+            </form>
+
+            <span className="block text-center w-full mt-2 text-sm">
+              Don't have account?
+              <Link
+                to="/register/student"
+                className="cursor-pointer hover:text-blue-500"
+              >
+                {" "}
+                Register
+              </Link>
+            </span>
+          </div>
+
+        
         <div className="w-2/5 bg-blue-500 text-white rounded-r-lg  h-[24rem] p-4 flex flex-col gap-2">
           <h2 className="text-h3">Important Instructions</h2>
           <div className="h-1 bg-white"></div>

@@ -2,7 +2,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState, useRef } from "react";
 import Input from "./Input";
 
-export default function DepartmentFormInput({ departments, setDepartments }) {
+export default function DepartmentsInputForm({ departments, setDepartments }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const departmentName = useRef();
   const cutoffRank = useRef();

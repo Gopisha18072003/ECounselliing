@@ -8,7 +8,7 @@ import validators from "../../utils/validators";
 import { useRequiredInput } from "../../hooks/useRequieredInput";
 import ImageUpload from "../../components/ImageUpload";
 import uploadImageToCloudinary from "../../utils/uploadImage";
-import DepartmentFormInput from "../../components/DepartmentFormInput";
+import DepartmentsInputForm from "../../components/DepartmentsInputForm";
 import CustomCheckbox from "../../components/CustomCheckbox";
 import { registerCollege } from "../../utils/http";
 import { useDispatch } from "react-redux";
@@ -51,7 +51,7 @@ export default function CollegeRegistration() {
       contactInfo: formData.get("contactNumber"),
       address: `${formData.get(
         "streetName"
-      )} ${selectedCity}, ${selectedState}`,
+      )}, ${selectedCity}, ${selectedState}`,
       nirfRank: formData.get("nirfRank"),
       mailId: formData.get("email"),
       password: enteredPassword,
@@ -294,7 +294,7 @@ export default function CollegeRegistration() {
                 step === 2 ? " flex flex-col gap-4 " : "hidden"
               }`}
             >
-              <DepartmentFormInput
+              <DepartmentsInputForm
                 departments={departments}
                 setDepartments={handleAddDepartment}
               />
@@ -405,7 +405,7 @@ export default function CollegeRegistration() {
                   }
                 >
                   {isPending && (
-                    <CircularProgress size="1.5rem" color="white" />
+                    <CircularProgress size="1.3rem" color="white" />
                   )}
                   {!isPending && <span>Submit</span>}
                 </button>

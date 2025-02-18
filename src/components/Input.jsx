@@ -12,12 +12,12 @@ const Input = ({
   ...rest
 }) => {
   return (
-    <div className="input-group flex justify-center gap-[2rem] items-center w-full">
-      <div className="w-2/5 flex gap-1">
+    <div className="input-group flex justify-between gap-[2rem] items-center w-full">
+      <div className=" flex gap-1 justify-start items-center w-1/2">
         {label && (
           <label
             htmlFor={id || name}
-            className="input-label block text-gray-700 text-p font-semibold"
+            className="input-label block text-gray-700 text-p font-semibold "
           >
             {label}
           </label>
@@ -26,7 +26,7 @@ const Input = ({
             required && (<span className="text-[1.25rem] text-red-500">*</span>)
         }
       </div>
-      <div className="w-[3/5]">
+      <div className="flex flex-col w-1/2">
         <input
           type={type}
           name={name}

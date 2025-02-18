@@ -6,10 +6,11 @@ export default function AcademicInformation() {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <div>
-      <form className="flex flex-col gap-4 items-center justify-center py-4">
+    <div className="flex flex-col items-center justify-center w-full py-6 gap-4">
+        <p className="text-sm text-gray-500"><span className="text-lg text-red-600">*</span> You cannot change your academics details</p>
+      <form className="flex flex-col gap-4 items-center justify-center py-4 w-1/2 p-6 bg-gray-100 rounded-md shadow-md">
         <Input
-          label="10th Marks"
+          label="10th Marks(%)"
           name="tenthMarks"
           value={user.tenthMarks}
           disabled={true}
@@ -21,7 +22,7 @@ export default function AcademicInformation() {
           disabled={true}
         />
         <Input
-          label="12th Marks"
+          label="12th Marks(%)"
           name="twelvesMarks"
           value={user.twelveMarks}
           disabled={true}

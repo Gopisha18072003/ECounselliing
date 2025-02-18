@@ -12,6 +12,7 @@ import store from './store'
 import Errorpage from './pages/Errorpage';
 import DashboardPage from './pages/Dashboard';
 import AdminLogin from './pages/administration/Login'
+import ForgotPassword from './pages/student/ForgotPassword'
 
 
 function App() {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: '/register/student',
         element: <StudentRegistration />
+      },
+      {
+        path: '/student/forgot-password',
+        element: <ForgotPassword/>
       },
       {
         path: '/login/college',

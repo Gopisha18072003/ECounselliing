@@ -20,7 +20,7 @@ export default function StudentDashboard() {
     dashboardComponent = <AcademicInformation/>
   }else if(selectedSection == "counsellingProcess") {
     dashboardComponent = <Counselling/>
-  }else if(selectedSection == "accounts"){
+  }else if(selectedSection == "settings"){
     dashboardComponent = <Accounts />
   }
 
@@ -38,8 +38,8 @@ export default function StudentDashboard() {
             <li className={`px-2 py-4 ${selectedSection === "counsellingProcess" ? "border-b-2 border-blue-500" : ""}`}>
               <button onClick={() => handleSelectSection("counsellingProcess")}>Counselling Process</button>
             </li>
-            <li className={`px-2 py-4 ${selectedSection === "deleteAccount" ? "border-b-2 border-blue-500" : ""}`}>
-              <button onClick={() => handleSelectSection("accounts")}>Accounts</button>
+            <li className={`px-2 py-4 ${selectedSection === "settings" ? "border-b-2 border-blue-500" : ""}`}>
+              <button onClick={() => handleSelectSection("settings")}>Account Settings</button>
             </li>
           </ul>
         </div>
