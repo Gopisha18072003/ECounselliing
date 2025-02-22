@@ -68,7 +68,6 @@ export default function CollegeRegistration() {
         logo: uploadedImageUrl,
         departments,
       };
-      console.log(completeFormData);
       const response = await registerCollege(completeFormData);
       if (response.statusCode == 201) {
         dispatch(
@@ -77,9 +76,9 @@ export default function CollegeRegistration() {
             message: [response.message],
           })
         );
-        dispatch(authActions.login(response.data));
-        localStorage.setItem('user', JSON.stringify(response.data));
-        navigate("/dashboard");
+        // dispatch(authActions.login(response.data));
+        // localStorage.setItem('user', JSON.stringify(response.data));
+        navigate('/login/college');
       } else {
         dispatch(
           uiActions.showErrorNotification({
@@ -88,6 +87,7 @@ export default function CollegeRegistration() {
           })
         );
       }
+      return {errors: null};
       
     } catch (error) {
       dispatch(

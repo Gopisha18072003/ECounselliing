@@ -102,15 +102,20 @@ export default function Accounts() {
 
   function handleLogout() {
     // Dispatch the logout action
+
     dispatch(authActions.logout());
+
     dispatch(
       uiActions.showSuccessNotification({
         status: "success",
         message: "Logout Successfully",
       })
     );
+
     // Remove user from localStorage
     localStorage.removeItem("user");
+
+    localStorage.removeItem("token");
 
     navigate("/");
   }
@@ -135,7 +140,7 @@ export default function Accounts() {
         navigate("/");
       }
     } catch (err) {
-        setDeletingAccount(false);
+      setDeletingAccount(false);
 
       dispatch(
         uiActions.showErrorNotification({

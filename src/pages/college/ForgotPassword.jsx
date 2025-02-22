@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RequestOtpForm from "./resetPassword/RequestOtpForm";
 import ValidateOtpForm from "./resetPassword/ValidateOtpForm";
 import ResetPasswordForm from "./resetPassword/ResetPasswordForm";
-export default function ForgotPasswordStudent() {
+export default function ForgotPasswordCollege() {
   const [step, setStep] = useState(1);
   const [otpEmail, setOtpEmail] = useState("");
   return (

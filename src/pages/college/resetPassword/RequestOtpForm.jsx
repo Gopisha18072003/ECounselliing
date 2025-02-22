@@ -87,7 +87,7 @@ const RequestOtpForm = ({ onOtpSent, setStep, cancelForgetPassword }) => {
             </button>
             <button
               className="font-semibold"
-              onClick={() => navigate('/login/student')}
+              onClick={() => navigate('/login/college')}
               type="button"
             >
               Cancel

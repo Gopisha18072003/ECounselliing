@@ -12,8 +12,8 @@ import store from './store'
 import Errorpage from './pages/Errorpage';
 import DashboardPage from './pages/Dashboard';
 import AdminLogin from './pages/administration/Login'
-import ForgotPassword from './pages/student/ForgotPassword'
-
+import ForgotPasswordStudent from './pages/student/ForgotPassword'
+import ForgotPasswordCollege from './pages/college/ForgotPassword'
 
 function App() {
 const router = createBrowserRouter([
@@ -36,11 +36,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/student/forgot-password',
-        element: <ForgotPassword/>
+        element: <ForgotPasswordStudent/>
       },
       {
         path: '/login/college',
         element:<CollegeLogin/>
+      },
+      {
+        path: '/college/forgot-password',
+        element: <ForgotPasswordCollege/>
       },
       {
         path: '/login/student',

@@ -5,7 +5,7 @@ const Dropdown = ({ name, id, options, value='', onChange, label, required }) =>
     <div className="flex gap-[2rem] justify-center items-center w-full"> 
       <div className="w-1/2 flex gap-1">
         {label && (
-          <label htmlFor={id} className="block text-gray-700 text-p font-medium">
+          <label htmlFor={id} className="block text-gray-700 text-p font-semibold">
             {label}
           </label>
         )}

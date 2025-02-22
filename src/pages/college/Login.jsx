@@ -8,8 +8,9 @@ import { loginCollege } from "../../utils/http";
 import { uiActions } from "../../store/uiSlice";
 import { authActions } from "../../store/authSlice";
 import CircularProgress from "@mui/material/CircularProgress";
-import { collegeResponse } from "../../assets/data/DUMMY_DATA";
 import { useNavigate } from "react-router-dom";
+import { getCollegeDetails } from "../../utils/http";
+
 export default function CollegeLogin() {
   const {
     value: enteredEmail,
@@ -23,9 +24,11 @@ export default function CollegeLogin() {
     handleInputBlur: handlePasswordBlur,
     hasError: passwordError,
   } = useInput("", validators.passwordValidator);
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
   async function loginAction(prev, formData) {
     const enteredData = {
       mailId: formData.get("email"),
@@ -38,16 +41,25 @@ export default function CollegeLogin() {
       const response = await loginCollege(enteredData);
 
       // Handle successful login
-      if (response.statusCode === 200) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        dispatch(
-          uiActions.showSuccessNotification({
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        dispatch(authActions.addToken(response.token));
+        const collegeResponse = await getCollegeDetails();
+        localStorage.setItem("user", JSON.stringify(collegeResponse.data));
+        dispatch(uiActions.showSuccessNotification({
             status: "success",
-            message: [response.message],
+            message: ["Login Successful"],
           })
         );
-        dispatch(authActions.login(response.data)); // Store user data after login
-        navigate("/dashboard"); // Redirect to homepage after successful login
+        dispatch(authActions.login(collegeResponse.data));
+        navigate("/dashboard");
+      }else if(response.statusCode == 404) {
+        dispatch(
+            uiActions.showErrorNotification({
+              status: "fail",
+              message: [response.message],
+            })
+          );
       } else {
         dispatch(
           uiActions.showErrorNotification({
@@ -60,6 +72,7 @@ export default function CollegeLogin() {
       return { errors: null };
     } catch (error) {
       // Handle error and show error notification
+      console.log(error)
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
@@ -112,7 +125,13 @@ export default function CollegeLogin() {
                 errorMessage={passwordError}
                 required
               />
-
+                <button
+                  className="w-full text-end text-[14px] font-semibold text-gray-500 hover:text-gray-600"
+                  type="button"
+                  onClick={() => navigate('/college/forgot-password')}
+                >
+                  Forgot Password?
+                </button>
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-p disabled:cursor-not-allowed"

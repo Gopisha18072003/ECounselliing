@@ -1,4 +1,3 @@
-
 import Input from "../../components/Input";
 import { useState, useActionState, useEffect } from "react";
 import Dropdown from "../../components/DropdownInput";
@@ -16,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../../store/authSlice";
 import { uiActions } from "../../store/uiSlice";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function StudentRegistration() {
   const [step, setStep] = useState(1);
@@ -44,7 +43,9 @@ export default function StudentRegistration() {
     const enteredData = {
       studentName: formData.get("fullName"),
       contactNumber: formData.get("contactNumber"),
-      address: `${formData.get("houseNumber")} ${formData.get("streetName")}, ${selectedCity}, ${selectedState}`,
+      address: `${formData.get(
+        "streetName"
+      )}, ${selectedCity}, ${selectedState}`,
       schoolName: formData.get("schoolName"),
       mailId: formData.get("email"),
       tenthMarks: formData.get("tenthMarks"),
@@ -53,8 +54,7 @@ export default function StudentRegistration() {
       password: formData.get("password"),
       tenthboard: selectedBOE10,
       twelfthboard: selectedBOE12,
-
-    }
+    };
     try {
       // If no errors, proceed with image upload and form submission
       const uploadedImageUrl = await uploadImageToCloudinary(selectedImage);
@@ -64,21 +64,35 @@ export default function StudentRegistration() {
         img: uploadedImageUrl,
       };
 
-      const response = await registerStudent(completeFormData)
-      console.log(response)
-      
+      const response = await registerStudent(completeFormData);
+
       // Email already exits
-      if(response.statusCode == 201) {
-        dispatch(uiActions.showSuccessNotification({status: "success", message: [response.message]}));
-        dispatch(authActions.login(response.data));
-        localStorage.setItem('user', JSON.stringify(response.data));
-        navigate('/dashboard');
-      }else {
-        dispatch(uiActions.showErrorNotification({status: "fail", message: [response.message]}));
+      if (response.statusCode == 201) {
+        dispatch(
+          uiActions.showSuccessNotification({
+            status: "success",
+            message: [response.message],
+          })
+        );
+        // dispatch(authActions.login(response.data));
+        // localStorage.setItem('user', JSON.stringify(response.data));
+        navigate("/login/student");
+      } else {
+        dispatch(
+          uiActions.showErrorNotification({
+            status: "fail",
+            message: [response.message],
+          })
+        );
       }
       return { errors: null };
     } catch (error) {
-        dispatch(uiActions.showErrorNotification({status: "fail", message: [error.message]}));
+      dispatch(
+        uiActions.showErrorNotification({
+          status: "fail",
+          message: [error.message],
+        })
+      );
     }
   }
 
@@ -126,7 +140,7 @@ export default function StudentRegistration() {
     tenthMarks: "",
     twelthMarks: "",
     erank: "",
-    schoolName: ""
+    schoolName: "",
   };
   const requiredFieldsDidEditValues = {
     fullName: false,
@@ -171,7 +185,6 @@ export default function StudentRegistration() {
 
   return (
     <div className="container">
-
       {/* Main Content */}
       <div className="min-h-screen  flex items-center justify-center bg-gray-100">
         <div className="bg-white shadow-md rounded-lg p-8 w-2/5 my-12">
@@ -219,14 +232,6 @@ export default function StudentRegistration() {
                 errorMessage={hasErrors.contactNumber}
                 required
                 maxLength={10}
-              />
-              <Input
-                type="number"
-                name="houseNumber"
-                id="houseNumber"
-                label="House Number"
-                placeholder="21"
-                onChange={() => {}}
               />
               <Input
                 name="streetName"
@@ -279,7 +284,6 @@ export default function StudentRegistration() {
                   enteredRequiredValues.contactNumber.length !== 10 ||
                   enteredRequiredValues.fullName.length < 3 ||
                   enteredRequiredValues.streetName.length < 3
-                  
                 }
               >
                 Next
@@ -366,7 +370,6 @@ export default function StudentRegistration() {
                 errorMessage={hasErrors.erank}
               />
               <Input
-                
                 name="schoolName"
                 id="schoolName"
                 label="School Name"
@@ -394,14 +397,13 @@ export default function StudentRegistration() {
                     hasErrors.erank ||
                     !selectedBOE10 ||
                     !selectedBOE12 ||
-                    enteredRequiredValues.tenthMarks < 0  ||
+                    enteredRequiredValues.tenthMarks < 0 ||
                     enteredRequiredValues.tenthMarks > 100 ||
                     enteredRequiredValues.twelthMarks < 0 ||
                     enteredRequiredValues.twelthMarks > 100 ||
                     enteredRequiredValues.erank < 0 ||
                     !enteredRequiredValues.erank ||
                     !enteredRequiredValues.schoolName
-
                   }
                 >
                   Next
@@ -460,12 +462,19 @@ export default function StudentRegistration() {
               <div className="h-1 bg-gray-300"></div>
               <CustomCheckbox
                 label="Verified all the informations (You will not able to change it later)"
-                onChange={() =>{setAggremant((prev) => ({ ...prev, verified: !prev.verified }));}}
+                onChange={() => {
+                  setAggremant((prev) => ({
+                    ...prev,
+                    verified: !prev.verified,
+                  }));
+                }}
                 name="verified"
               />
-              <CustomCheckbox 
+              <CustomCheckbox
                 label="All the informations provided by you are correct"
-                onChange={() =>{setAggremant((prev) => ({ ...prev, correct: !prev.correct }));}}
+                onChange={() => {
+                  setAggremant((prev) => ({ ...prev, correct: !prev.correct }));
+                }}
                 name="correct"
               />
               <div className="flex justify-between">
@@ -489,20 +498,16 @@ export default function StudentRegistration() {
                     aggremant.correct === false
                   }
                 >
-                  {
-                    isPending && <CircularProgress size="1.5rem" color="white" />
-                  }
-                  {
-                    !isPending && <span>Submit</span>
-                  }
-                  
+                  {isPending && (
+                    <CircularProgress size="1.5rem" color="white" />
+                  )}
+                  {!isPending && <span>Submit</span>}
                 </button>
               </div>
             </div>
           </form>
         </div>
       </div>
-
     </div>
   );
 }

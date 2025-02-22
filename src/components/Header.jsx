@@ -7,8 +7,6 @@ export default function Header() {
     const year = new Date().getFullYear();
     const successNotification = useSelector((state) => state.ui.successNotification)
     const errorNotification = useSelector((state) => state.ui.errorNotification)
-    const user = useSelector((state) => state.auth.user);
-    console.log(user);
   return (
     <>
     <header className="header flex justify-between items-center h-[12rem] w-full px-[1rem] ">

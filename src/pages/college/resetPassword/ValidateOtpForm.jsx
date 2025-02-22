@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { validateOtpCollege } from "../../../utils/http"; // API function to validate OTP
+import { useEffect, useState } from "react";
+import { requestOtpCollege, validateOtpCollege } from "../../../utils/http"; // API function to validate OTP
 import { useActionState } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../../store/uiSlice";
@@ -7,7 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const ValidateOtpForm = ({ otpEmail, setStep }) => {
   const dispatch = useDispatch();
-
+  const [sendOtpIsPending, setSendOtpIsPending] = useState(false);
   async function validateOtpAction(prev, formData) {
     const otp = formData.get("otp");
     try {
@@ -36,6 +36,30 @@ const ValidateOtpForm = ({ otpEmail, setStep }) => {
   const [formState, validateFormAction, validateOtpIsPending] =
     useActionState(validateOtpAction);
 
+  async function reSendOtp() {
+    try {
+      setSendOtpIsPending(true);
+      const response = await requestOtpCollege(otpEmail);
+      setSendOtpIsPending(false);
+      if (response.statusCode === 200) {
+        dispatch(
+          uiActions.showSuccessNotification({
+            status: "success",
+            message: [response.message],
+          })
+        );
+        return { mailId: otpEmail };
+      }
+    } catch (err) {
+      dispatch(
+        uiActions.showErrorNotification({
+          status: "fail",
+          message: err.message || "Failed to send OTP",
+        })
+      );
+    }
+  }
+
   // Use `useEffect` to update `setStep(3)` after validation succeeds
   useEffect(() => {
     if (formState?.success) {
@@ -56,18 +80,31 @@ const ValidateOtpForm = ({ otpEmail, setStep }) => {
           name="otp"
           required
         />
-
-        <button
-          className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-md text-white font-semibold mt-4 w-[110px]"
-          type="submit"
-          disabled={validateOtpIsPending}
-        >
-          {validateOtpIsPending ? (
-            <CircularProgress color="inherit" size={22} />
-          ) : (
-            "Validate"
-          )}
-        </button>
+        <div className="flex justify-between items-center mt-4">
+          <button
+            className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-md text-white font-semibold mt-4 w-[110px]"
+            type="submit"
+            disabled={validateOtpIsPending}
+          >
+            {validateOtpIsPending ? (
+              <CircularProgress color="inherit" size={22} />
+            ) : (
+              "Validate"
+            )}
+          </button>
+          <button
+            className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-md text-white mt-4 font-semibold w-[120px]"
+            type="button"
+            disabled={sendOtpIsPending}
+            onClick={reSendOtp}
+          >
+            {sendOtpIsPending ? (
+              <CircularProgress color="white" size={20} />
+            ) : (
+              "Re-Send"
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -110,16 +110,16 @@ export default function Accounts() {
     );
     // Remove user from localStorage
     localStorage.removeItem("user");
-
+    localStorage.removeItem("token");
     navigate("/");
   }
 
   const handleDeleteAccount = async () => {
-    setDeletingAccount(true)
+    setDeletingAccount(true);
     try {
       const mailId = user.mailId;
 
-      const response = await deleteCollege(mailId);
+      const response = await deleteStudent();
       setDeletingAccount(false);
       if (response.statusCode == 204) {
         dispatch(authActions.logout());
@@ -134,13 +134,16 @@ export default function Accounts() {
         navigate("/");
       }
     } catch (err) {
-      console.log(err);
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
-          message: ["Failed to delete (Contact Administration)"],
+          message: [err.message],
         })
       );
+      navigate("/login/student");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
     }
   };
 

@@ -6,14 +6,16 @@ import { useActionState } from "react";
 import { updateStudent } from "../../../utils/http";
 import { uiActions } from "../../../store/uiSlice";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../../store/authSlice";
 
 export default function BasicInformation() {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isUpdated, setIsUpdated] = useState(false);
   const [changeAddress, setChangeAddress] = useState({
     isChanges: false,
-    houseNumber: "",
     streetName: "",
     city: "",
     state: "",
@@ -22,8 +24,8 @@ export default function BasicInformation() {
   async function updateAction(prev, formData) {
     const studentName = formData.get("fullName").trim();
     const contactNumber = formData.get("contactNumber").trim();
-    const address = `${changeAddress.houseNumber} ${changeAddress.streetName}, ${changeAddress.city}, ${changeAddress.state}`;
-    const updateBasicData = { studentName, mailId, contactNumber, address };
+    const address = `${changeAddress.streetName}, ${changeAddress.city}, ${changeAddress.state}`;
+    const updateBasicData = { studentName, contactNumber, address };
 
     const updatedUserData = {
       ...user,
@@ -59,10 +61,11 @@ export default function BasicInformation() {
     }
     setChangeAddress((prev) => ({ ...prev, isChanges: false }));
     try {
-      const response = await updateStudent(user.mailId, updatedUserData);
+      const response = await updateStudent(updatedUserData);
 
       if (response.statusCode === 200) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        dispatch(authActions.update(response.data));
         dispatch(
           uiActions.showSuccessNotification({
             status: "success",
@@ -73,12 +76,18 @@ export default function BasicInformation() {
         return response.data;
       }
     } catch (error) {
+
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
           message: [error.message],
         })
       );
+      navigate("/login/student");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
+    return null;
     }
     setIsUpdated(false)
   }

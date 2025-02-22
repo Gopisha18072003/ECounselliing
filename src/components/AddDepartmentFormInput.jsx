@@ -7,10 +7,12 @@ import { CircleTwoTone } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../store/uiSlice";
+import {useNavigate} from "react-router-dom"
 
 export default function AddDepartmentFormInput({ mailId, setDepartments }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   async function addDepartmentAction(prev, formData) {
     const departmentName = formData.get("departmentName");
     const noOfSeats = formData.get("noOfSeats");
@@ -30,13 +32,18 @@ export default function AddDepartmentFormInput({ mailId, setDepartments }) {
       setDepartments((prev) => [...prev, newDepartment]);
       setIsFormOpen(false);
     } catch (err) {
-      console.log(err);
+    console.log(err);
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
-          message: ["Something went wrong"],
+          message: [err.message],
         })
       );
+      navigate("/login/college");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
+      return null;
     }
   }
 

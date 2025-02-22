@@ -16,26 +16,26 @@ const TextArea = ({
   ...rest
 }) => {
   function extractAddressComponents(address) {
-    // Define a regular expression to capture house number, street name, city, and state
-    const addressRegex =
-      /^(\d+)?\s*([^,]+?)\s*,\s*([^,]+)\s*,\s*([A-Za-z\s]+)$/;
+    // Regular expression to capture street name, city, and state
+    const addressRegex = /^([^,]+)\s*,\s*([^,]+)\s*,\s*([A-Za-z\s]+)$/;
 
     const match = address.match(addressRegex);
 
     if (match) {
       return {
-        houseNumber: match[1] || null, // House number (optional)
-        streetName: match[2]?.trim() || null, // Street name
-        city: match[3]?.trim() || null, // City
-        state: match[4]?.trim() || null, // State
+        streetName: match[1]?.trim() || null, // Street name
+        city: match[2]?.trim() || null, // City
+        state: match[3]?.trim() || null, // State
       };
     }
+
+    return null; // Return null if format doesn't match
   }
-  const { houseNumber, streetName, city, state } =extractAddressComponents(value);
+
+  const { streetName, city, state } = extractAddressComponents(value);
   useEffect(() => {
     setChangeAddress((prevState) => ({
       ...prevState,
-      houseNumber,
       streetName,
       city,
       state,
@@ -101,17 +101,6 @@ const TextArea = ({
         {changeAddress.isChanges && (
           <div className="flex flex-col w-full gap-4">
             <div className="flex flex-col gap-4">
-              {changeAddress?.houseNumber && (
-                <Input
-                  type="number"
-                  name="houseNumber"
-                  id="houseNumber"
-                  label="House Number"
-                  value={changeAddress?.houseNumber}
-                  onChange={(event) => handleInputChange(event, "houseNumber")}
-                />
-              )}
-
               <Input
                 name="streetName"
                 id="streetName"

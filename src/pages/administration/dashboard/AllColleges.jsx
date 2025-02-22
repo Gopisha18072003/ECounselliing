@@ -1,6 +1,13 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
-import { fetchAllColleges } from "../../../utils/http"; // Assuming this function updates status
+import { fetchAllColleges, fetchCollegeDetails } from "../../../utils/http";
 import CircularProgress from "@mui/material/CircularProgress";
+import { uiActions } from "../../../store/uiSlice";
+import { authActions } from "../../../store/authSlice";
+import EntityDetailsModal from "../../../components/EntityDetailsModal";
+import CollegeDetails from "../../../components/CollegeDetails";
 
 export default function AllColleges() {
   const {
@@ -8,6 +15,65 @@ export default function AllColleges() {
     loading: isLoading,
     error,
   } = useFetch(fetchAllColleges);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [collegeDetailsLoading, setCollegeDetailsLoading] = useState(false); // ✅ New State
+
+  useEffect(() => {
+    if (user?.role === "ADMIN" && error) {
+      dispatch(
+        uiActions.showErrorNotification({
+          status: "fail",
+          message: [error],
+        })
+      );
+      navigate("/login/admin");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
+    }
+  }, [error, dispatch, navigate]);
+
+  async function handleGetCollegeDetails(id) {
+    setCollegeDetailsLoading(true); // ✅ Start Loading
+    try {
+      const response = await fetchCollegeDetails(id);
+      if (response.statusCode === 200) {
+        setSelectedCollege(response.data);
+      } else {
+        dispatch(
+          uiActions.showErrorNotification({
+            status: "fail",
+            message: ["Failed to fetch college details"],
+          })
+        );
+      }
+    } catch (error) {
+      dispatch(
+        uiActions.showErrorNotification({
+          status: "fail",
+          message: [error.message || "Failed to fetch college details"],
+        })
+      );
+      navigate("/login/admin");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
+    } finally {
+      setCollegeDetailsLoading(false); // ✅ Stop Loading
+    }
+  }
+
+  function handleClickCollege(college) {
+    setSelectedCollege(null); // Reset old data
+    setIsModalOpen(true);
+    handleGetCollegeDetails(college.collegeName);
+  }
 
   return (
     <>
@@ -32,7 +98,12 @@ export default function AllColleges() {
                     {college.collegeId}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {college.collegeName}
+                    <button
+                      className="hover:text-blue-500"
+                      onClick={() => handleClickCollege(college)}
+                    >
+                      {college.collegeName}
+                    </button>
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {!college.status ? (
@@ -47,17 +118,11 @@ export default function AllColleges() {
                   </td>
                   <td className="border border-gray-300 px-4 py-2 ">
                     {!college.status ? (
-                      <button
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mx-auto"
-                        onClick={() => {}}
-                      >
+                      <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mx-auto">
                         Unblock
                       </button>
                     ) : (
-                      <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mx-auto"
-                        onClick={() => {}}
-                      >
+                      <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mx-auto">
                         Block
                       </button>
                     )}
@@ -68,18 +133,27 @@ export default function AllColleges() {
           </table>
         </div>
       )}
+
       {isLoading && (
         <div className="flex justify-center items-center h-[20rem]">
           <CircularProgress />
         </div>
       )}
-      {
-        isLoading && !allColleges && error && (
-            <div className="flex justify-center items-center  h-[20rem]">
-          <CircularProgress />
-        </div>
-        )
-      }
+
+      {/* ✅ Updated Modal - Shows Spinner if Loading */}
+      {isModalOpen && (
+        <EntityDetailsModal
+          data={selectedCollege}
+          isLoading={collegeDetailsLoading} // Pass Loading State
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedCollege(null);
+          }}
+        >
+            <CollegeDetails />
+        </EntityDetailsModal>
+      )}
     </>
   );
 }

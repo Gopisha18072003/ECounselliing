@@ -5,10 +5,12 @@ import TextArea from "../../../components/ChnageAddress";
 import { updateCollege } from "../../../utils/http";
 import { uiActions } from "../../../store/uiSlice";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../../store/authSlice";
 export default function BasicInformation() {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isUpdated, setIsUpdated] = useState(false);
   const [changeAddress, setChangeAddress] = useState({
     isChanges: false,
@@ -27,7 +29,7 @@ export default function BasicInformation() {
       address,
       contactInfo,
       nirfRank: user.nirfRank,
-      mailId: user.mailId
+      mailId: user.mailId,
     };
     // Regular expressions for validation
     const nameRegex = /^[A-Za-z\s]+$/; // Only alphabets and spaces
@@ -61,6 +63,7 @@ export default function BasicInformation() {
 
       if (response.statusCode === 200) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        dispatch(authActions.update(response.data));
         dispatch(
           uiActions.showSuccessNotification({
             status: "success",
@@ -77,6 +80,11 @@ export default function BasicInformation() {
           message: [error.message],
         })
       );
+      navigate("/login/student");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
+      return null;
     }
     setIsUpdated(false);
   }

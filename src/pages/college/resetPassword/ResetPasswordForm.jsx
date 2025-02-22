@@ -59,7 +59,7 @@ const ResetPasswordForm = ({ email, setStep }) => {
   useEffect(() => {
     if (formState?.success) {
       setStep(1);
-      navigate("/login/student");
+      navigate("/login/college");
     }
   }, [formState, setStep, navigate]);
 

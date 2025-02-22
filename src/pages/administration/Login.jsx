@@ -29,7 +29,7 @@ export default function AdminLogin() {
 
   async function loginAction(prev, formData) {
     const enteredData = {
-      userId: formData.get("email"),
+      mailId: formData.get("email"),
       password: formData.get("password"),
     };
 
@@ -39,15 +39,17 @@ export default function AdminLogin() {
       const response = await loginAdmin(enteredData);
 
       // Handle successful login
-      if (response.statusCode === 200) {
-        localStorage.setItem('user', JSON.stringify(response.data));
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+        dispatch(authActions.addToken(response.token));
+        localStorage.setItem('user', JSON.stringify({role: 'ADMIN'}));
+        dispatch(authActions.login({role: 'ADMIN'}));
         dispatch(
           uiActions.showSuccessNotification({
             status: "success",
-            message: [response.message],
+            message: ["Login Successful"],
           })
         );
-        dispatch(authActions.login(response.data)); // Store user data after login
         navigate("/dashboard"); // Redirect to homepage after successful login
       } else {
         dispatch(

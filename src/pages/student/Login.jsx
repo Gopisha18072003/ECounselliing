@@ -4,8 +4,8 @@ import validators from "../../utils/validators";
 import { Link } from "react-router-dom";
 import { useActionState, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import RequestOtpForm from "./resetPassword/RequestOtpForm";
 import {
+    getStudentDetails,
   loginStudent,
 } from "../../utils/http";
 import { uiActions } from "../../store/uiSlice";
@@ -43,18 +43,30 @@ export default function StudentLogin() {
       // Attempt to log the user in
       // console.log(enteredData);
       const response = await loginStudent(enteredData);
-
-      // Handle successful login
-      if (response.statusCode === 200) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        dispatch(
-          uiActions.showSuccessNotification({
+        
+      if(response.token) {
+        localStorage.setItem('token', response.token);
+        dispatch(authActions.addToken(response.token));
+        const studentResponse= await getStudentDetails();
+        localStorage.setItem("user", JSON.stringify(studentResponse.data));
+        dispatch(authActions.login(studentResponse.data));
+        dispatch(uiActions.showSuccessNotification({
             status: "success",
+            message: ["Login Successful"],
+          })
+        );
+        navigate("/dashboard");
+      }
+      // Handle unsuccessful login
+      else if (response.statusCode === 404) {
+        dispatch(
+          uiActions.showErrorNotification({
+            status: "fail",
             message: [response.message],
           })
         );
-        dispatch(authActions.login(response.data)); // Store user data after login
-        navigate("/dashboard"); // Redirect to homepage after successful login
+        // dispatch(authActions.login(response.data)); // Store user data after login
+        // navigate("/dashboard"); // Redirect to homepage after successful login
       } else {
         dispatch(
           uiActions.showErrorNotification({
@@ -67,6 +79,7 @@ export default function StudentLogin() {
       return { errors: null };
     } catch (error) {
       // Handle error and show error notification
+      console.log(error);
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
@@ -124,7 +137,7 @@ export default function StudentLogin() {
                   type="button"
                   onClick={() => navigate('/student/forgot-password')}
                 >
-                  Forgot Password
+                  Forgot Password?
                 </button>
 
                 <button

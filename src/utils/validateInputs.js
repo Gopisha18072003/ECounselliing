@@ -12,7 +12,6 @@ export const validateInputs = (formData, extraInputs) => {
     const twelthMarks = formData.get("twelthMarks") || "";
     const boardOfEducation10 = formData.get("boardOfEducation10") || "";
     const boardOfEducation12 = formData.get("boardOfEducation12") || "";
-    const houseNumber = formData.get("houseNumber") || "";
     const streetName = formData.get("streetName") || "";
   
     // Validation logic

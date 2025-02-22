@@ -15,9 +15,6 @@ export default function AddDepartments() {
     }, [departments])
 
 
-
-  
-
   return (
     <div className="w-full flex flex-col justify-center items-center py-8 gap-6">
       <h1 className="text-h3 font-bold py-2 text-gray-700">Existing Departments</h1>
