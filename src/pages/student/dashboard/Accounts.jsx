@@ -153,7 +153,6 @@ export default function Accounts() {
       setSendingOtp(true);
       const response = await requestOtpStudent(user.mailId);
       setSendingOtp(false);
-      console.log(response);
       if (response.statusCode === 200) {
         dispatch(
           uiActions.showSuccessNotification({

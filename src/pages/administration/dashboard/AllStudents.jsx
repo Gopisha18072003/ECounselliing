@@ -8,13 +8,19 @@ import { uiActions } from "../../../store/uiSlice";
 import { authActions } from "../../../store/authSlice";
 import EntityDetailsModal from "../../../components/EntityDetailsModal";
 import StudentDetails from "../../../components/StudentDetails";
+import { useQuery } from "@tanstack/react-query";
 
 export default function AllStudents() {
-  const {
-    data: allStudents,
-    loading: isLoading,
-    error,
-  } = useFetch(fetchAllStudents);
+    const {
+        data: allStudents,
+        isFetching: isLoading,
+        isError,
+        error,
+      } = useQuery({
+        queryKey: ["allStudents"],
+        queryFn: fetchAllStudents,
+      });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
@@ -24,11 +30,11 @@ export default function AllStudents() {
   const [studentDetailsLoading, setStudentDetailsLoading] = useState(false);
 
   useEffect(() => {
-    if (user?.role === "ADMIN" && error) {
+    if (isError && error && !isFetching) {
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
-          message: [error],
+          message: "Invalid or expired Token. Please login again!!",
         })
       );
       navigate("/login/admin");
@@ -36,7 +42,7 @@ export default function AllStudents() {
       localStorage.removeItem("token");
       dispatch(authActions.logout());
     }
-  }, [error, dispatch, navigate]);
+  }, [isError, navigate, dispatch]);
 
   async function handleGetStudentDetails(id) {
       setStudentDetailsLoading(true); // ✅ Start Loading
@@ -77,7 +83,7 @@ export default function AllStudents() {
 
   return (
     <>
-      {!isLoading && allStudents && (
+      {!isLoading && allStudents.length > 0  && (
         <div className="p-4">
           <h2 className="text-xl font-bold mb-4">All Students</h2>
           <table className="table-auto border-collapse border border-gray-300 w-full">
@@ -122,6 +128,13 @@ export default function AllStudents() {
           <CircularProgress />
         </div>
       )}
+      {
+        !isLoading && allStudents.statusCode === 204 && (
+            <div className="h-[400px] flex justify-center items-center">
+                <h1 className="text-3xl font-bold text-gray-400">No Students registered yet</h1>
+            </div>
+        )
+      }
       {isModalOpen && (
         <EntityDetailsModal
           data={selectedStudent}

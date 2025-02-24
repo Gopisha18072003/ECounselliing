@@ -55,7 +55,6 @@ const validators = {
   },
 
   checkError : (validationResults) => {
-        console.log(validationResults)
         let hasError = false;
         for (let key in validationResults) {
             if (validationResults[key]) {

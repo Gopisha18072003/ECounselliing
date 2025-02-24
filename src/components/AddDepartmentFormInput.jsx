@@ -32,7 +32,6 @@ export default function AddDepartmentFormInput({ mailId, setDepartments }) {
       setDepartments((prev) => [...prev, newDepartment]);
       setIsFormOpen(false);
     } catch (err) {
-    console.log(err);
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",

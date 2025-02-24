@@ -72,7 +72,6 @@ export default function CollegeLogin() {
       return { errors: null };
     } catch (error) {
       // Handle error and show error notification
-      console.log(error)
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",

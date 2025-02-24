@@ -8,13 +8,17 @@ import { uiActions } from "../../../store/uiSlice";
 import { authActions } from "../../../store/authSlice";
 import EntityDetailsModal from "../../../components/EntityDetailsModal";
 import CollegeDetails from "../../../components/CollegeDetails";
-
+import { useQuery } from "@tanstack/react-query";
 export default function AllColleges() {
-  const {
-    data: allColleges,
-    loading: isLoading,
-    error,
-  } = useFetch(fetchAllColleges);
+    const {
+        data: allColleges,
+        isFetching: isLoading,
+        isError,
+        error,
+      } = useQuery({
+        queryKey: ["allColleges"],
+        queryFn: fetchAllColleges,
+      });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,11 +29,11 @@ export default function AllColleges() {
   const [collegeDetailsLoading, setCollegeDetailsLoading] = useState(false); // ✅ New State
 
   useEffect(() => {
-    if (user?.role === "ADMIN" && error) {
+    if (isError && error && !isFetching) {
       dispatch(
         uiActions.showErrorNotification({
           status: "fail",
-          message: [error],
+          message: "Invalid or expired Token. Please login again!!",
         })
       );
       navigate("/login/admin");
@@ -37,7 +41,7 @@ export default function AllColleges() {
       localStorage.removeItem("token");
       dispatch(authActions.logout());
     }
-  }, [error, dispatch, navigate]);
+  }, [isError, navigate, dispatch]);
 
   async function handleGetCollegeDetails(id) {
     setCollegeDetailsLoading(true); // ✅ Start Loading
@@ -77,7 +81,8 @@ export default function AllColleges() {
 
   return (
     <>
-      {!isLoading && allColleges && (
+      {!isLoading && allColleges?.length > 0 && (
+        
         <div className="p-4">
           <h2 className="text-xl font-bold mb-4">All Colleges</h2>
           <table className="table-auto border-collapse border border-gray-300 w-full">
@@ -139,6 +144,13 @@ export default function AllColleges() {
           <CircularProgress />
         </div>
       )}
+      {
+        !isLoading && allColleges.statusCode === 204 && (
+            <div className="h-[400px] flex justify-center items-center">
+                <h1 className="text-3xl font-bold text-gray-400">No colleges registered yet</h1>
+            </div>
+        )
+      }
 
       {/* ✅ Updated Modal - Shows Spinner if Loading */}
       {isModalOpen && (

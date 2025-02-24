@@ -14,8 +14,13 @@ import DashboardPage from './pages/Dashboard';
 import AdminLogin from './pages/administration/Login'
 import ForgotPasswordStudent from './pages/student/ForgotPassword'
 import ForgotPasswordCollege from './pages/college/ForgotPassword'
+import {QueryClientProvider, QueryClient} from '@tanstack/react-query'
+import { queryClient } from './utils/queryClient';
+import { fetchNotices } from './utils/http'
+
 
 function App() {
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -24,7 +29,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Homepage />
+        element: <Homepage />,
+        loader: async() => {
+            try {
+                const response = await fetchNotices();
+                return response;
+            }catch(err) {
+                console.error("Loader error:", err);
+        throw new Response("Error loading notices", { status: 500 });
+            }
+        
+        }
       },
       {
         path: '/register/college',
@@ -63,7 +78,9 @@ const router = createBrowserRouter([
 ])
   return (
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        </QueryClientProvider>
     </Provider>
   )
 }

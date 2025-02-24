@@ -23,7 +23,6 @@ export default function Accounts() {
     navigate('/')
 
     // Optional: Navigate to login page or home page after logout
-    console.log("User logged out");
   };
 
 

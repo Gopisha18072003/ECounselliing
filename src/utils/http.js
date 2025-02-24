@@ -15,12 +15,14 @@ const sendRequest = async (url, method, body = null, headers = {}) => {
 
   if (!response.ok) {
     const errorData = await response.json();
+    if(errorData.statusCode === 500) {
+        return errorData;
+    }
     throw new Error(errorData.message || `HTTP Error: ${response.status}`);
   }
   if (response.status == 204) {
     return { statusCode: 204, message: "Deleted Sucessfully" };
   }
-
   return response.json();
 };
 
@@ -238,19 +240,190 @@ export const addDepartment = async (mailId, newDepartment) => {
 
 // Counselling Process
 
-
-
 // 3. Give Allocation Result
 export const giveAllocationResult = async () => {
-    const url = `${API_BASE_URL}/admin/give-result`;
+  const url = `${API_BASE_URL}/admin/give-result`;
+  const storedToken = localStorage.getItem("token"); // Get token from localStorage
+  if (!storedToken) {
+    throw new Error({
+      statusCode: "401",
+      message: "No authentication token found",
+    });
+  }
+  return sendRequest(url, "POST", null, {
+    Authorization: `Bearer ${storedToken}`,
+  });
+};
+
+// Application and Counselling Process
+export const getCounsellingStatus = async () => {
+  const url = `${API_BASE_URL}/public/check-counselling-status`;
+  return sendRequest(url, "GET", null);
+};
+
+export const getEligibleCollegesByRank = async (rank) => {
+  const storedToken = localStorage.getItem("token"); // Get token from localStorage
+  if (!storedToken) {
+    throw new Error({
+      statusCode: "401",
+      message: "No authentication token found",
+    });
+  }
+  const url = `${API_BASE_URL}/student/departments/by-erank/${rank}`;
+  return sendRequest(url, "GET", null, {
+    Authorization: `Bearer ${storedToken}`,
+  });
+};
+
+export const submitApplication = async (applicationData) => {
+  const storedToken = localStorage.getItem("token"); // Get token from localStorage
+  if (!storedToken) {
+    throw new Error({
+      statusCode: "401",
+      message: "No authentication token found",
+    });
+  }
+  const url = `${API_BASE_URL}/student/applications/save`;
+  return sendRequest(url, "POST", applicationData, {
+    Authorization: `Bearer ${storedToken}`,
+  });
+};
+
+export const getApplicationData = async (studentName) => {
+  const storedToken = localStorage.getItem("token"); // Get token from localStorage
+  if (!storedToken) {
+    throw new Error({
+      statusCode: "401",
+      message: "No authentication token found",
+    });
+  }
+  const url = `${API_BASE_URL}/student/applications/${studentName}`;
+  return sendRequest(url, "GET", null, {
+    Authorization: `Bearer ${storedToken}`,
+  });
+};
+
+export const updateCounsellingStatus = async (status) => {
     const storedToken = localStorage.getItem("token"); // Get token from localStorage
-    if(!storedToken){
-        throw new Error({
-            statusCode: "401",
-            message: "No authentication token found"
-        })
-    }
+  if (!storedToken) {
+    throw new Error({
+      statusCode: "401",
+      message: "No authentication token found",
+    });
+  }
+  if(status === "NOT_STARTED" || status === "APPLICATION_SUBMISSION_STARTED" || status === "APPLICATION_SUBMISSION_CLOSED" || status === "APPLICATION_SUBMISSION_CLOSED" || status === "ALLOCATION_RESULT_OUT" ) {
+    const url = `${API_BASE_URL}/admin/set-status/${status}`;
     return sendRequest(url, "POST", null, {
-        Authorization: `Bearer ${storedToken}`
+      Authorization: `Bearer ${storedToken}`,
+    });
+  }else{
+    throw new Error({message: `HTTP Error: Invalid Status`});
+  }
+ 
+}
+
+export const fetchAllApplications = async  () => {
+    const storedToken = localStorage.getItem("token"); // Get token from localStorage
+  if (!storedToken) {
+    throw new Error({
+      statusCode: "401",
+      message: "No authentication token found",
+    });
+  }
+  const url = `${API_BASE_URL}/admin/all-applications`;
+    return sendRequest(url, "GET", null, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+
+}
+
+export const publishAllocationResult = async () => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/admin/give-result`;
+    return sendRequest(url, "GET", null, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+}
+
+export const getAllocationResultAdmin = async () => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/admin/allocation-result`;
+    return sendRequest(url, "GET", null, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+}
+
+export const getAllocationResultStudent = async (id) => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/student/${id}/result`;
+    return sendRequest(url, "GET", null, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+}
+
+export const getAllocationResultCollege = async (id) => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/college/${id}/students`;
+    return sendRequest(url, "GET", null, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+}
+
+export const resetCounselling = async() => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/admin/reset-allotment`;
+    return sendRequest(url, "DELETE", null, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+}
+
+// notice
+
+export const fetchNotices = async () => {
+    const url = `${API_BASE_URL}/public/all-notices`;
+    return sendRequest(url, "GET", null);
+}
+
+export const addNotice = async (noticeData) => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/admin/notices/save`;
+    return sendRequest(url, "POST", noticeData, {
+      Authorization: `Bearer ${storedToken}`,
     });
 }

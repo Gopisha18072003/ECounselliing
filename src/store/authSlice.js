@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // Get user data from localStorage if it exists
 const storedUserData = localStorage.getItem('user');
 const storedToken = localStorage.getItem('token');
+
 let finalData = null;
 if (storedUserData) {
   const jsonData = JSON.parse(storedUserData);
