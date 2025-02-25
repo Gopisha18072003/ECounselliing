@@ -3,7 +3,7 @@ import { CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getAllocationResultStudent } from "../../../utils/http";
-
+import React from "react";
 export default function Result() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const { data: allocationResult, isPending } = useQuery({

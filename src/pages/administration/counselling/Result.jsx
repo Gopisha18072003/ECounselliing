@@ -8,6 +8,7 @@ import { uiActions } from "../../../store/uiSlice";
 import { getAllocationResultAdmin, resetCounselling } from "../../../utils/http";
 import { queryClient } from "../../../utils/queryClient";
 import { useState } from "react";
+import React from "react";
 export default function Result() {
   const {
     data: allocationResult,

@@ -8,7 +8,7 @@ import { uiActions } from "../../../store/uiSlice";
 import { authActions } from "../../../store/authSlice";
 import EntityDetailsModal from "../../../components/EntityDetailsModal";
 import StudentDetails from "../../../components/StudentDetails";
-
+import React from "react";
 export default function AllStudents() {
   const {
     data: allStudents,

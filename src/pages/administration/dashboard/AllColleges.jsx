@@ -79,51 +79,51 @@ export default function AllColleges() {
   }
 
   return (
-    <div className="p-6 bg-gray-100 h-[600px]">
+    <div className="p-6 bg-gray-100 h-[600px] rounded-lg">
       {!isLoading && allColleges?.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow-md h-full">
+        <div className="bg-white p-6 rounded-lg shadow-md h-[550px]">
           <h2 className="text-2xl font-bold text-gray-700 mb-6">All Colleges</h2>
-          <div className="overflow-x-auto scroll-y-auto h-[500px] rounded-lg">
-            <table className="w-full border-collapse bg-white rounded-lg">
-              <thead className="bg-blue-500 text-white">
-                <tr >
-                  <th className="px-6 py-3 text-left">College ID</th>
-                  <th className="px-6 py-3 text-left">College Name</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allColleges.map((college) => (
-                  <tr key={college.collegeId} className="border-b hover:bg-gray-100">
-                    <td className="px-6 py-4">{college.collegeId}</td>
-                    <td className="px-6 py-4">
-                      <button
-                        className="text-blue-600 hover:underline"
-                        onClick={() => handleClickCollege(college)}
-                      >
-                        {college.collegeName}
-                      </button>
-                    </td>
-                    <td className="px-6 py-4">
-                      {!college.status ? (
-                        <span className="text-red-500 font-semibold">Blocked</span>
-                      ) : (
-                        <span className="text-green-500 font-semibold">Active</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      {!college.status ? (
-                        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Unblock</button>
-                      ) : (
-                        <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Block</button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <div className="overflow-y-auto max-h-[450px]">
+    <table className="w-full border-collapse bg-white rounded-lg">
+      <thead className="bg-blue-500 text-white">
+        <tr>
+          <th className="px-6 py-3 text-left">College ID</th>
+          <th className="px-6 py-3 text-left">College Name</th>
+          <th className="px-6 py-3 text-left">Status</th>
+          <th className="px-6 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {allColleges.map((college) => (
+          <tr key={college.collegeId} className="border-b hover:bg-gray-100">
+            <td className="px-6 py-4">{college.collegeId}</td>
+            <td className="px-6 py-4">
+              <button
+                className="text-blue-600 hover:underline"
+                onClick={() => handleClickCollege(college)}
+              >
+                {college.collegeName}
+              </button>
+            </td>
+            <td className="px-6 py-4">
+              {!college.status ? (
+                <span className="text-red-500 font-semibold">Blocked</span>
+              ) : (
+                <span className="text-green-500 font-semibold">Active</span>
+              )}
+            </td>
+            <td className="px-6 py-4">
+              {!college.status ? (
+                <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Unblock</button>
+              ) : (
+                <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Block</button>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
         </div>
       )}
 

@@ -42,7 +42,8 @@ export default function Notices({ notices }) {
               <h3 className="text-lg font-semibold text-gray-800">{notice.title}</h3>
               <p className="text-gray-600 text-sm truncate">{notice.description}</p>
               <p className="text-gray-500 text-xs mt-1">
-                Published on: {new Date(notice.publishedDate).toLocaleDateString()}
+                Published on: {new Date(notice.publishedDate).toLocaleDateString("en-GB")}
+
               </p>
             </div>
           ))}

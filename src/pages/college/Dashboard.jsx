@@ -5,6 +5,7 @@ import BasicInformation from "./dashboard/BasicInformtion";
 import Accounts from '../college/dashboard/Accounts';
 import Counselling from "../college/dashboard/Counselling";
 import AddDepartments from "./dashboard/AddDepartments";
+import React from "react";
 export default function CollegeDashboard() {
   const userData = useSelector((state) => state.auth.user);
   const [selectedSection, setSelectedSection] = useState("basicInformation");

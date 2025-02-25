@@ -6,6 +6,7 @@ import AllStudents from '../administration/dashboard/AllStudents'
 import AddNotices from '../administration/dashboard/AddNotices'
 import Accounts from '../administration/dashboard/Accounts';
 import Counselling from "../administration/dashboard/CounsellingProcess";
+import React from "react";
 export default function CollegeDashboard() {
   const userData = useSelector((state) => state.auth.user);
   const [selectedSection, setSelectedSection] = useState("participatedColleges");

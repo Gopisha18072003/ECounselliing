@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import CloseIcon from '@mui/icons-material/Close';
-
+import React from "react";
 const Modal = forwardRef(({ children, title }, ref) => {
   const modalRef = useRef();
 

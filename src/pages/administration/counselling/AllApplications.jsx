@@ -12,7 +12,7 @@ import { uiActions } from "../../../store/uiSlice";
 import { queryClient } from "../../../utils/queryClient";
 import { authActions } from "../../../store/authSlice";
 import { useNavigate } from "react-router-dom";
-
+import React from "react";
 export default function AllApplications() {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["allApplications"],

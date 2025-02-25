@@ -10,7 +10,7 @@ import { authActions } from "../../store/authSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { getCollegeDetails } from "../../utils/http";
-
+import React from "react";
 export default function CollegeLogin() {
   const {
     value: enteredEmail,

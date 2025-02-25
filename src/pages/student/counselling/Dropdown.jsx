@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import React from "react";
 export default function CollegeDepartmentSelector({ collegeData, onSelect, selectedPreferences }) {
     const [selectedCollege, setSelectedCollege] = useState("");
     const [selectedDepartment, setSelectedDepartment] = useState("");

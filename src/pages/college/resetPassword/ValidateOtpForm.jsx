@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../../store/uiSlice";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import React from "react";
 const ValidateOtpForm = ({ otpEmail, setStep }) => {
   const dispatch = useDispatch();
   const [sendOtpIsPending, setSendOtpIsPending] = useState(false);

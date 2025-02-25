@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import dummyImage from "../assets/images/dummy.png";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React from "react";
 export default function ImageUpload({ label, onImageChange, previewImage }) {
   const fileInputRef = useRef(null);
   return (

@@ -1,3 +1,4 @@
+import React from "react";
 export default function ApplicationDetails({ data }) {
     return (
       <div className=" w-full max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-6 flex flex-col overflow-auto">

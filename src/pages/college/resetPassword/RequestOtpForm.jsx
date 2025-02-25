@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { uiActions } from "../../../store/uiSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
-
+import React from "react";
 const RequestOtpForm = ({ onOtpSent, setStep, cancelForgetPassword }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

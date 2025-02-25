@@ -2,7 +2,7 @@ import { useState } from "react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link } from "react-router-dom";
-
+import React from "react";
 export default function Authentication() {
   const [toggleLoginSelection, setToggleLoginSelection] = useState(false);
   const [toggleRegistrationSelection, setToggleRegistrationSelection] =

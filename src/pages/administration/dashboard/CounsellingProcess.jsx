@@ -13,7 +13,7 @@ import {
   import { authActions } from "../../../store/authSlice.js";
   import { useNavigate } from "react-router-dom";
   import Result from "../counselling/Result.jsx";
-  
+  import React from "react";
   export default function Counselling() {
     const {
       data: counsellingStatus,

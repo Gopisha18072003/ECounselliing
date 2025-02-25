@@ -8,7 +8,7 @@ import { useInput } from "../../../hooks/useInput";
 import Input from "../../../components/Input";
 import { uiActions } from "../../../store/uiSlice";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import React from "react";
 const ResetPasswordForm = ({ email, setStep }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

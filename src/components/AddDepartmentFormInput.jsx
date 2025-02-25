@@ -8,6 +8,7 @@ import { CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../store/uiSlice";
 import {useNavigate} from "react-router-dom"
+import React from "react";
 
 export default function AddDepartmentFormInput({ mailId, setDepartments }) {
   const [isFormOpen, setIsFormOpen] = useState(false);

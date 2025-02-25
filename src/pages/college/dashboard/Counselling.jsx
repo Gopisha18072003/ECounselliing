@@ -7,7 +7,7 @@ import { authActions } from "../../../store/authSlice.js";
 import { uiActions } from "../../../store/uiSlice.js";
 import { useNavigate } from "react-router-dom";
 import Result from "../counselling/Result.jsx";
-
+import React from "react";
 export default function Counselling() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

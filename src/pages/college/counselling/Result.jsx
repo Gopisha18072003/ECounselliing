@@ -3,7 +3,7 @@ import { CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getAllocationResultCollege } from "../../../utils/http";
-
+import React from "react";
 export default function Result() {
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
@@ -31,7 +31,7 @@ export default function Result() {
       {!isResultPending && allocationResult?.data?.length > 0 && (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-200 text-gray-700 font-semibold">
+            <thead className="bg-green-200 text-gray-700 font-semibold">
               <tr>
                 <th className="p-3 border border-gray-300">ID</th>
                 <th className="p-3 border border-gray-300">Name</th>

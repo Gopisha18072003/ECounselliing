@@ -2,6 +2,7 @@ import Authentication from "../components/Authentication";
 import { useSelector } from "react-redux";
 import Notices from "../components/Notices";
 import { useLoaderData } from "react-router-dom";
+import React from "react";
 
 export default function Homepage() {
   const notices = useLoaderData();

@@ -8,7 +8,7 @@ import { useInput } from "../../hooks/useInput";
 import validators from "../../utils/validators";
 import { useRequiredInput } from "../../hooks/useRequieredInput";
 import ImageUpload from "../../components/ImageUpload";
-import uploadImageToCloudinary from "../../utils/uploadImage";
+import uploadImageToS3 from "../../utils/uploadImage";
 import CustomCheckbox from "../../components/CustomCheckbox";
 import { registerStudent } from "../../utils/http";
 import { useDispatch } from "react-redux";
@@ -16,7 +16,7 @@ import { authActions } from "../../store/authSlice";
 import { uiActions } from "../../store/uiSlice";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import React from "react";
 export default function StudentRegistration() {
   const [step, setStep] = useState(1);
   const [selectedState, setSelectedState] = useState("");
@@ -57,7 +57,7 @@ export default function StudentRegistration() {
     };
     try {
       // If no errors, proceed with image upload and form submission
-      const uploadedImageUrl = await uploadImageToCloudinary(selectedImage);
+      const uploadedImageUrl = await uploadImageToS3(selectedImage);
 
       const completeFormData = {
         ...enteredData,

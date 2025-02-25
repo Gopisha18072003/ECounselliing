@@ -7,7 +7,7 @@ import { useInput } from "../../hooks/useInput";
 import validators from "../../utils/validators";
 import { useRequiredInput } from "../../hooks/useRequieredInput";
 import ImageUpload from "../../components/ImageUpload";
-import uploadImageToCloudinary from "../../utils/uploadImage";
+import uploadImageToS3 from "../../utils/uploadImage";
 import DepartmentsInputForm from "../../components/DepartmentsInputForm";
 import CustomCheckbox from "../../components/CustomCheckbox";
 import { registerCollege } from "../../utils/http";
@@ -16,7 +16,7 @@ import { authActions } from "../../store/authSlice";
 import { uiActions } from "../../store/uiSlice";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import React from "react";
 const steps = [
   "Basic Information",
   "Deparetment Information",
@@ -59,7 +59,7 @@ export default function CollegeRegistration() {
     };
     try {
       // Step 1: Upload the image to Cloudinary
-      const uploadedImageUrl = await uploadImageToCloudinary(selectedImage);
+      const uploadedImageUrl = await uploadImageToS3(selectedImage);
 
       // Step 2: Add Cloudinary URL to the form data
 

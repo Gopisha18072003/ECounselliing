@@ -1,3 +1,4 @@
+import React from "react";
 export default function StudentDetails({ data }) {
     return (
       <div className="text-center">

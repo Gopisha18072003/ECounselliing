@@ -10,7 +10,7 @@ import { authActions } from "../../../store/authSlice.js";
 import { uiActions } from "../../../store/uiSlice.js";
 import { useNavigate } from "react-router-dom";
 import Result from "../counselling/Result.jsx";
-
+import React from "react";
 export default function Counselling() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -75,7 +75,7 @@ export default function Counselling() {
         {!isStatusPending && status === "APPLICATION_SUBMISSION_CLOSED" && (
           <div className="flex flex-col items-center justify-center h-full">
             <h1 className="text-2xl font-semibold text-gray-400 text-center">
-              <span className="text-blue-500">Application submitted: </span> Result not yet released.
+              <span className="text-blue-500">Application submitted: </span> Result not released  yet.
             </h1>
           </div>
         )}

@@ -1,11 +1,11 @@
 import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import FolderIcon from "@mui/icons-material/Folder";
-import ArchiveIcon from "@mui/icons-material/Archive";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import React from "react";
 export default function NavigationBar() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const userData = useSelector((state) => state.auth.user);
@@ -41,33 +41,21 @@ export default function NavigationBar() {
         </li>
         <li>
           <NavLink
-            to="/questionPapers"
+            to="/notices"
             className={({ isActive }) =>
               `flex flex-row items-center gap-1 pb-2 ${
                 isActive ? "font-bold border-b-2 border-white" : ""
               }`
             }
           >
-            <span>Old Question Papers</span>
-            <FolderIcon fontSize="small" />
+            <span>Notices</span>
+            <NotificationsIcon fontSize="small" />
           </NavLink>
         </li>
+        
         <li>
           <NavLink
-            to="/archive"
-            className={({ isActive }) =>
-              `flex flex-row items-center gap-1 pb-2 ${
-                isActive ? "font-bold border-b-2 border-white" : ""
-              }`
-            }
-          >
-            <span>Archive</span>
-            <ArchiveIcon fontSize="small" />
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/contactUs"
+            to="/contactus"
             className={({ isActive }) =>
               `flex flex-row items-center gap-1 pb-2 ${
                 isActive ? "font-bold border-b-2 border-white" : ""

@@ -1,3 +1,4 @@
+import React from "react";
 export default function CustomCheckbox({ label, onChange, name }) {
   return (
     <div className="flex items-center gap-2">

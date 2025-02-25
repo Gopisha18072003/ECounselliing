@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { authActions } from "../../../store/authSlice.js";
 import { uiActions } from "../../../store/uiSlice.js";
 import { queryClient } from "../../../utils/queryClient.js";
-
+import React from "react";
 const transformResponse = (response) => {
   const result = {};
   response.forEach(({ departmentName, collegeName }) => {

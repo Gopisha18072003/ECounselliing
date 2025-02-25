@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AddDepartmentFormInput from "../../../components/AddDepartmentFormInput";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../../store/authSlice";
-
+import React from "react";
 export default function AddDepartments() {
   const existingDepartments = useSelector((state) => state.auth.user.departments);
   const [departments, setDepartments] = useState(existingDepartments);
