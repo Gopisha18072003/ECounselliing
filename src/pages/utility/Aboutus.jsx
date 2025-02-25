@@ -72,7 +72,7 @@ export default function AboutUs() {
               <img
                 src={abhay}
                 alt="Team Member"
-                className="mx-auto rounded-full max-h-[300px] object-fill"
+                className="mx-auto rounded-full "
               />
               <h3 className="text-xl font-semibold mt-3 ">Abhay Shaw</h3>
               <p className="text-gray-500">Project Lead & Backend Developer</p>
