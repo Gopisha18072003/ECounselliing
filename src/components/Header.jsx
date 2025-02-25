@@ -1,5 +1,5 @@
 import eCounsellingLogo from "../assets/images/e-counselling.png";
-import SuccessNotification from "./successNotification";
+import SuccessNotification from "./SuccessNotification";
 import ErrorNotification from "./ErrorNotification";
 import { useSelector } from "react-redux";
 import React from "react";
