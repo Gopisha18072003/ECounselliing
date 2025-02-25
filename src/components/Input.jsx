@@ -8,15 +8,16 @@ const Input = ({
   id,
   label,
   required = false,
+  errorMessage=null,
   ...rest
 }) => {
   return (
-    <div className="input-group flex justify-start gap-[2rem] items-center w-full">
-      <div className="w-2/5 flex gap-1">
+    <div className="input-group flex justify-between gap-[2rem] items-center w-full">
+      <div className=" flex gap-1 justify-start items-center w-1/2">
         {label && (
           <label
             htmlFor={id || name}
-            className="input-label block text-gray-700 text-p font-semibold"
+            className="input-label block text-gray-700 text-p font-semibold "
           >
             {label}
           </label>
@@ -25,15 +26,20 @@ const Input = ({
             required && (<span className="text-[1.25rem] text-red-500">*</span>)
         }
       </div>
-      <div className="w-1/5">
+      <div className="flex flex-col w-1/2">
         <input
           type={type}
           name={name}
           id={id || name}
           required={required}
-          className="input-field border-2 p-1 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input-field border-2 p-1 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
           {...rest} // Spread other props like `min`, `max`, `pattern`, etc.
         />
+        {
+          errorMessage && (
+            <p className="w-full text-sm font-medium text-red-400">{errorMessage}</p>
+          )
+        }
       </div>
     </div>
   );

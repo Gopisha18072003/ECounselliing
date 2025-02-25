@@ -4,13 +4,9 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
-const steps = [
-  'Personal Information',
-  'Academics Information',
-  'Password Creation',
-];
+;
 
-export default function HorizontalStepper({activeStep}) {
+export default function HorizontalStepper({activeStep, steps}) {
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep} alternativeLabel>

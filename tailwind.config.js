@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        roboto: ["'Roboto Flex'", "sans-serif"],
+        roboto: ["Roboto Flex", "sans-serif"],
       },
       fontSize: {
         h1: ["2rem", { lineHeight: "1.2", fontWeight: "700" }], // 40px
