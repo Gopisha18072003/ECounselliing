@@ -170,7 +170,7 @@ export default function CollegeRegistration() {
   const prevStep = () => setStep(step - 1);
 
   return (
-    <div className="container">
+    <div className="">
       {/* Main Content */}
       <div className="min-h-screen  flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
         <div className="bg-white shadow-md rounded-lg p-8 w-2/5 my-12">

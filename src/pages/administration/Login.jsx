@@ -77,10 +77,10 @@ export default function AdminLogin() {
     errors: null,
   });
   return (
-    <div className="container">
+    <div className="">
       {/* Main Content */}
-      <div className="min-h-screen  flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 w-full">
-        <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem]">
+      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 ">
+        <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem] max-w-[600px]">
           <h1 className="text-h3 font-bold text-center mb-6 uppercase">
             Sign-In for Administrator
           </h1>

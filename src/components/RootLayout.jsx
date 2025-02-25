@@ -11,7 +11,7 @@ export default function RootLayout() {
       <Header />
       <NavigationBar />
       <NotificationManager/>
-      <Outlet />
+      <Outlet/>
       <Footer />
     </>
   );

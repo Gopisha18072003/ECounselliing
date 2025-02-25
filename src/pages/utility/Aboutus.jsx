@@ -72,7 +72,7 @@ export default function AboutUs() {
               <img
                 src={abhay}
                 alt="Team Member"
-                className="mx-auto rounded-full "
+                className="mx-auto rounded-full w-[14rem] h-[14rem] object-cover"
               />
               <h3 className="text-xl font-semibold mt-3 ">Abhay Shaw</h3>
               <p className="text-gray-500">Project Lead & Backend Developer</p>
@@ -81,7 +81,7 @@ export default function AboutUs() {
               <img
                 src={aditya}
                 alt="Team Member"
-                className="mx-auto rounded-full"
+                className="mx-auto rounded-full w-[14rem] h-[14rem] object-cover"
               />
               <h3 className="text-xl font-semibold mt-3">Aditya Shukla</h3>
               <p className="text-gray-500">Backend Developer</p>
@@ -91,7 +91,7 @@ export default function AboutUs() {
               <img
                 src={gopi}
                 alt="Team Member"
-                className="mx-auto rounded-full"
+                className="mx-auto rounded-full w-[14rem] h-[14rem] object-cover"
               />
               <h3 className="text-xl font-semibold mt-3">Gopi Kumar Shaw</h3>
               <p className="text-gray-500">Frontend Developer</p>
@@ -101,7 +101,7 @@ export default function AboutUs() {
               <img
                 src={samir}
                 alt="Team Member"
-                className="mx-auto rounded-full"
+                className="mx-auto rounded-full w-[14rem] h-[14rem] object-cover"
               />
               <h3 className="text-xl font-semibold mt-3">Samir Kumar</h3>
               <p className="text-gray-500">Frontend Developer & Operations</p>
