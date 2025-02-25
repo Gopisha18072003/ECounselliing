@@ -47,7 +47,6 @@ const RequestOtpForm = ({ onOtpSent, setStep, cancelForgetPassword }) => {
   const [formState, sendOtpFormAction, sendOtpIsPending] =
     useActionState(sendOtpAction);
 
-  // Use `useEffect` to update `setStep` after state is updated
   useEffect(() => {
     if (formState?.mailId) {
       setStep(2);
@@ -56,45 +55,43 @@ const RequestOtpForm = ({ onOtpSent, setStep, cancelForgetPassword }) => {
   }, [formState, setStep, onOtpSent]);
 
   return (
-    <div className="h-2/3 flex flex-col justify-center border-2 rounded-md px-4">
-      <h3 className="text-[16px] font-semibold text-gray-600">
-        Send OTP to your registered email.
+    <div className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+      <h3 className="text-lg font-semibold text-gray-700 text-center">
+        Send OTP to your registered email
       </h3>
-      <div className=" my-4 w-full">
-        <form action={sendOtpFormAction} className="w-full">
-          <Input
-            name="email"
-            id="email"
-            label="Email"
-            placeholder="gopi123@dummy.com"
-            value={enteredEmail}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
-            errorMessage={emailError}
-            required
-          />
-          <div className="flex justify-between items-center mt-2">
-            <button
-              className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-md text-white font-semibold w-[80px]"
-              type="submit"
-              disabled={sendOtpIsPending}
-            >
-              {sendOtpIsPending ? (
-                <CircularProgress color="white" size={20}  />
-              ) : (
-                "Send"
-              )}
-            </button>
-            <button
-              className="font-semibold"
-              onClick={() => navigate('/login/student')}
-              type="button"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
+      <form action={sendOtpFormAction} className="mt-4 space-y-4">
+        <Input
+          name="email"
+          id="email"
+          label="Email"
+          placeholder="gopi123@dummy.com"
+          value={enteredEmail}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          errorMessage={emailError}
+          required
+        />
+        <div className="flex justify-between items-center mt-2">
+          <button
+            className="w-24 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition disabled:bg-gray-400"
+            type="submit"
+            disabled={sendOtpIsPending}
+          >
+            {sendOtpIsPending ? (
+              <CircularProgress color="inherit" size={20} />
+            ) : (
+              "Send OTP"
+            )}
+          </button>
+          <button
+            className="text-gray-600 hover:text-gray-800 font-semibold transition"
+            onClick={() => navigate('/login/student')}
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { uiActions } from "../../../store/uiSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../../store/authSlice";
+
 export default function BasicInformation() {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -31,11 +32,10 @@ export default function BasicInformation() {
       nirfRank: user.nirfRank,
       mailId: user.mailId,
     };
-    // Regular expressions for validation
-    const nameRegex = /^[A-Za-z\s]+$/; // Only alphabets and spaces
-    const contactRegex = /^\d{10}$/; // Exactly 10 digits
 
-    // Validation checks
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const contactRegex = /^\d{10}$/;
+
     if (!collegeName || !nameRegex.test(collegeName)) {
       dispatch(
         uiActions.showErrorNotification({
@@ -57,6 +57,7 @@ export default function BasicInformation() {
       setIsUpdated(false);
       return user;
     }
+
     setChangeAddress((prev) => ({ ...prev, isChanges: false }));
     try {
       const response = await updateCollege(updatedCollegeData);
@@ -88,24 +89,24 @@ export default function BasicInformation() {
     }
     setIsUpdated(false);
   }
+
   const [formState, formAction, isPending] = useActionState(updateAction);
 
   return (
-    <div className="w-[80%] mx-auto py-6">
+    <div className="w-full max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col items-center justify-center h-[600px]">
       <img
         src={user.logo}
         alt="logo"
-        className="w-[12rem] h-[12rem] rounded-full border-4 border-blue-300 mx-auto my-5 object-cover"
+        className="w-32 h-32 rounded-full border-4 border-blue-500 object-cover shadow-md"
       />
-      <p className="mb-1 text-center w-full font-medium text-gray-700">
-        {user.mailId}
-      </p>
-      <p className="text-md font-medium text-gray-700 text-center mb-4">
-        <span>NIRF Ranking: </span>
+      <p className="text-lg text-gray-700 font-semibold mt-4">{user.mailId}</p>
+      <p className="text-md text-gray-600 font-medium mt-1">
+        <span className="font-semibold text-gray-800">NIRF Ranking:</span>{" "}
         {user.nirfRank}
       </p>
+
       <form
-        className="flex flex-col gap-4 items-center justify-center p-6 bg-gray-100 rounded-md shadow-md"
+        className="w-full flex flex-col gap-4 mt-6 p-6 bg-gray-50 rounded-lg shadow-md"
         action={formAction}
       >
         <Input
@@ -117,7 +118,7 @@ export default function BasicInformation() {
         <Input
           label="Contact Number"
           name="contactNumber"
-          defaultValue={formState?.contactInfo || user.contactInfo} // Contact Number is editable
+          defaultValue={formState?.contactInfo || user.contactInfo}
           onChange={(value = true) => setIsUpdated(value)}
         />
         <TextArea
@@ -132,10 +133,9 @@ export default function BasicInformation() {
         <button
           type="submit"
           disabled={!isUpdated}
-          className="bg-green-500 rounded-md px-4 py-2 w-1/2 text-white font-semibold hover:bg-green-600 hover:cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed"
+          className="w-full bg-green-500 text-white font-semibold py-2 rounded-md shadow-md hover:bg-green-600 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
         >
-          {isPending && <CircularProgress color="white" size="1.5rem" />}
-          {!isPending && <span>Update</span>}
+          {isPending ? <CircularProgress color="inherit" size="1.5rem" /> : "Update"}
         </button>
       </form>
     </div>

@@ -8,13 +8,13 @@ export default function Homepage() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 px-6 pt-6 pb-12">
       {!isAuthenticated && <Authentication />}
 
       <main className="flex flex-col lg:flex-row gap-8 mx-auto max-w-6xl bg-white shadow-lg rounded-lg p-6">
         {/* Sidebar */}
         <div className="lg:w-2/5 w-full bg-gray-100 p-6 rounded-md shadow-md">
-          <h2 className="text-xl font-semibold text-blue-700 mb-4">Latest Notices</h2>
+          <h2 className="text-xl font-semibold text-blue-700 mb-4">Notice Board</h2>
           <Notices notices={notices} />
         </div>
 

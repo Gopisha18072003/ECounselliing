@@ -25,17 +25,17 @@ export default function ErrorNotification({ status, message, onClose }) {
 
   return (
     <div
-      className={`border-2 bg-red-500 rounded-md flex flex-col gap-2 items-center justify-center fixed right-[2%] top-[20%] w-[300px] shadow-md transition-transform duration-500 overflow-hidden ${
-        isVisible ? "translate-x-0" : "translate-x-[110%]"
-      }`}
+      className={`border border-red-600 bg-red-500 rounded-lg flex flex-col gap-2 items-center justify-center fixed z-50 right-5 top-20 w-80 shadow-lg transition-transform duration-500 overflow-hidden transform ${
+        isVisible ? "translate-x-0" : "translate-x-full"
+      } p-4`}
     >
-      <div className="flex items-center gap-2 px-4 pt-2  text-white">
-        <CancelIcon />
-        <span className="text-p">{message}</span>
+      <div className="flex items-center gap-2 px-4 pt-2 text-white font-semibold">
+        <CancelIcon className="text-white" />
+        <span>{message}</span>
       </div>
-      <div className="relative w-full h-2 bg-red-200 overflow-hidden">
+      <div className="relative w-full h-2 bg-red-300 rounded-full overflow-hidden">
         <div
-          className="absolute top-0 left-0 h-full bg-red-600 transition-all"
+          className="absolute top-0 left-0 h-full bg-red-700 transition-all ease-in-out"
           style={{ width: `${progress}%` }}
         />
       </div>

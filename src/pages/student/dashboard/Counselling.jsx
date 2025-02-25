@@ -11,77 +11,82 @@ import { uiActions } from "../../../store/uiSlice.js";
 import { useNavigate } from "react-router-dom";
 import Result from "../counselling/Result.jsx";
 
-export default function Counselling(){
+export default function Counselling() {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-    const {data:counsellingStatus, isPending: isStatusPending, isError: isErrorStatus, error: statusError} = useQuery({
-        queryKey: ['counsellingStatus'],
-        queryFn: getCounsellingStatus,
-    });
-    const {data: applicationData, isPending: isApplicationPending, isError: isErrorApplication, applicationError} = useQuery({
-        queryKey: ['applicationData'],
-        queryFn: () => getApplicationData(user.studentName),
-    });
-    useEffect(() => {
-    if (isErrorStatus && statusError && !isFetching) {
-      dispatch(
-        uiActions.showErrorNotification({
-          status: "fail",
-          message: "Invalid or expired Token. Please login again!!",
-        })
-      );
-      navigate("/login/student");
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      dispatch(authActions.logout());
-    }
-  }, [isErrorStatus, navigate, dispatch]);
     
+    const { data: counsellingStatus, isPending: isStatusPending, isError: isErrorStatus, error: statusError } = useQuery({
+      queryKey: ['counsellingStatus'],
+      queryFn: getCounsellingStatus,
+    });
+  
+    const { data: applicationData, isPending: isApplicationPending } = useQuery({
+      queryKey: ['applicationData'],
+      queryFn: () => getApplicationData(user.studentName),
+    });
+  
+    useEffect(() => {
+      if (isErrorStatus && statusError) {
+        dispatch(
+          uiActions.showErrorNotification({
+            status: "fail",
+            message: "Invalid or expired Token. Please login again!",
+          })
+        );
+        navigate("/login/student");
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        dispatch(authActions.logout());
+      }
+    }, [isErrorStatus, navigate, dispatch]);
+  
     const status = counsellingStatus?.data?.status;
+  
     return (
-        <div className="w-full flex flex-col justify-center items-center py-6 bg-gray-100">
-
-            {
-                (isStatusPending || isApplicationPending) && <CircularProgress color="primary" />
-            }
-            {
-                !isStatusPending && !isApplicationPending && status === "NOT_STARTED" && (
-                    <div className="h-[400px] flex justify-center items-center">
-                        <h1 className="text-[4rem] font-roboto text-gray-300">Counselling process not started yet</h1>
-                    </div>
-                )
-            }
-            {
-                !isStatusPending && !isApplicationPending && status === "APPLICATION_SUBMISSION_STARTED" && applicationData === undefined && (
-                    <div className="0">
-                        <h1 className="text-center mb-4 text-gray-600"><span className="text-lg font-semibold text-blue-500">Counselling Process Started:</span> Fill the application form</h1>
-                        <ApplicationForm/>
-                    </div>
-                )
-            }
-            {
-                !isStatusPending && !isApplicationPending && status === "APPLICATION_SUBMISSION_STARTED" && applicationData?.data && (
-                    <div className="0">
-                        <h1 className="text-center mb-4 text-gray-600"><span className="text-lg font-semibold text-blue-500">Counselling Process Started:</span> Application form submitted</h1>
-                        <ApplicationDetails data={applicationData.data}/>
-                    </div>
-                )
-            }
-            {
-                !isStatusPending && status === "APPLICATION_SUBMISSION_CLOSED" && (
-                    <div>
-                        <h1 className="text-[4rem] font-roboto text-gray-300">Application submitted : Result not out yet</h1>
-                    </div>
-                )
-            }
-            {
-                !isStatusPending && status === "ALLOCATION_RESULT_OUT" && (
-                    <div className="w-1/2 flex justify-center items-center">
-                        <Result />
-                    </div>
-                )
-            }
-        </div>
-    )
-}
+      <div className="w-full h-[700px] flex flex-col justify-center items-center bg-gray-100 shadow-md p-6 rounded-lg overflow-auto">
+        {/* Loading Spinner */}
+        {(isStatusPending || isApplicationPending) && (
+          <div className="flex justify-center items-center">
+            <CircularProgress color="primary" />
+          </div>
+        )}
+  
+        {/* Counselling Not Started */}
+        {!isStatusPending && !isApplicationPending && status === "NOT_STARTED" && (
+          <div className="flex flex-col items-center justify-center h-full">
+            <h1 className="text-3xl font-semibold text-gray-400 text-center">
+              Counselling process has not started yet
+            </h1>
+          </div>
+        )}
+  
+        {/* Application Submission Started */}
+        {!isStatusPending && !isApplicationPending && status === "APPLICATION_SUBMISSION_STARTED" && (
+          <div className="w-full">
+            <h1 className="text-center text-lg font-semibold text-blue-600 mb-4">
+              Counselling Process Started: <span className="text-black">{applicationData ? "Application Submitted" : "Fill the Application Form"}</span>
+            </h1>
+            {applicationData ? <ApplicationDetails data={applicationData.data} /> : <ApplicationForm />}
+          </div>
+        )}
+  
+        {/* Application Submission Closed */}
+        {!isStatusPending && status === "APPLICATION_SUBMISSION_CLOSED" && (
+          <div className="flex flex-col items-center justify-center h-full">
+            <h1 className="text-2xl font-semibold text-gray-400 text-center">
+              <span className="text-blue-500">Application submitted: </span> Result not yet released.
+            </h1>
+          </div>
+        )}
+  
+        {/* Allocation Result Out */}
+        {!isStatusPending && status === "ALLOCATION_RESULT_OUT" && (
+          <div className="w-full flex justify-center">
+            <Result />
+          </div>
+        )}
+      </div>
+    );
+  }
+  

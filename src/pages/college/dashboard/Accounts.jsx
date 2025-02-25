@@ -211,6 +211,7 @@ export default function Accounts() {
   ] = useActionState(resetPasswordAction);
 
   return (
+    
     <div className="p-6 bg-gray-100 rounded-md shadow-md max-w-lg mx-auto my-8">
       <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
 

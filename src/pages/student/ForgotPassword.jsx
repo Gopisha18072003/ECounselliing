@@ -9,7 +9,7 @@ export default function ForgotPasswordStudent() {
   return (
     <div className="container">
       {/* Main Content */}
-      <div className="min-h-screen  flex items-center justify-center bg-gray-100 w-full">
+      <div className="min-h-screen  flex items-center justify-center  bg-gradient-to-br from-blue-100 to-blue-300 w-full">
         <div className="bg-white shadow-md rounded-l-lg p-8 w-2/5 my-12 h-[24rem]">
           <h1 className="text-h3 font-bold text-center mb-6 uppercase">
             Reset Password
@@ -32,7 +32,7 @@ export default function ForgotPasswordStudent() {
         </div>
         <div className="w-2/5 bg-blue-500 text-white rounded-r-lg  h-[24rem] p-4 flex flex-col gap-2">
             <h2 className="text-h3">Important Instructions</h2>
-            <div className="h-1 bg-white"></div>
+            <div className="h-[1px] bg-white"></div>
             <ul className="list-disc px-4 text-base">
               <li>
                 Confidentiality of Password is solely responsibility of the

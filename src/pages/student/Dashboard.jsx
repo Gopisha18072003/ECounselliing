@@ -26,7 +26,7 @@ export default function StudentDashboard() {
 
   return (
     <>
-      <main className="p-6 flex flex-col">
+      <main className="p-6 flex flex-col h-[800px] scroll-y-auto">
         <div className="w-full">
           <ul className="flex flex-row justify-between items-center text-center rounded-t-lg text-black text-h4 border-b-2 border-gray-200">
             <li className={`px-2 py-4 ${selectedSection === "basicInformation" ? "border-b-2 border-blue-500" : ""}`}>
@@ -43,7 +43,7 @@ export default function StudentDashboard() {
             </li>
           </ul>
         </div>
-        <div className="w-full rounded-b-lg border-2 ">
+        <div className="w-full rounded-b-lg border-2 h-[700px] ">
           {/* Content for the selected section */}
           {
             dashboardComponent

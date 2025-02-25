@@ -27,121 +27,92 @@ export default function BasicInformation() {
     const address = `${changeAddress.streetName}, ${changeAddress.city}, ${changeAddress.state}`;
     const updateBasicData = { studentName, contactNumber, address };
 
-    const updatedUserData = {
-      ...user,
-      ...updateBasicData,
-    };
-    // Regular expressions for validation
-    const nameRegex = /^[A-Za-z\s]+$/; // Only alphabets and spaces
-    const contactRegex = /^\d{10}$/; // Exactly 10 digits
+    const updatedUserData = { ...user, ...updateBasicData };
 
     // Validation checks
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const contactRegex = /^\d{10}$/;
+
     if (!studentName || !nameRegex.test(studentName)) {
-      dispatch(
-        uiActions.showErrorNotification({
-          status: "fail",
-          message: [
-            "Invalid student name."
-          ],
-        })
-      );
-      setIsUpdated(false)
+      dispatch(uiActions.showErrorNotification({ status: "fail", message: ["Invalid student name."] }));
+      setIsUpdated(false);
       return user;
     }
 
     if (!contactNumber || !contactRegex.test(contactNumber)) {
-      dispatch(
-        uiActions.showErrorNotification({
-          status: "fail",
-          message: ["Contact number must be exactly 10 digits."],
-        })
-      );
-      setIsUpdated(false)
+      dispatch(uiActions.showErrorNotification({ status: "fail", message: ["Contact number must be exactly 10 digits."] }));
+      setIsUpdated(false);
       return user;
     }
+
     setChangeAddress((prev) => ({ ...prev, isChanges: false }));
+
     try {
       const response = await updateStudent(updatedUserData);
-
       if (response.statusCode === 200) {
         localStorage.setItem("user", JSON.stringify(response.data));
         dispatch(authActions.update(response.data));
-        dispatch(
-          uiActions.showSuccessNotification({
-            status: "success",
-            message: [response.message],
-          })
-        );
-        setIsUpdated(false)
+        dispatch(uiActions.showSuccessNotification({ status: "success", message: [response.message] }));
+        setIsUpdated(false);
         return response.data;
       }
     } catch (error) {
-
-      dispatch(
-        uiActions.showErrorNotification({
-          status: "fail",
-          message: [error.message],
-        })
-      );
+      dispatch(uiActions.showErrorNotification({ status: "fail", message: [error.message] }));
       navigate("/login/student");
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       dispatch(authActions.logout());
-    return null;
+      return null;
     }
-    setIsUpdated(false)
+    setIsUpdated(false);
   }
+
   const [formState, formAction, isPending] = useActionState(updateAction);
 
   return (
-    <div className="w-[80%] mx-auto py-6">
-      <img
-        src={user.img}
-        alt="profile"
-        className="w-[12rem] h-[12rem] rounded-full border-4 border-blue-300 mx-auto my-5 object-cover"
-      />
-      <p className="mb-4 text-center w-full font-medium text-gray-700">
-        {user.mailId}
-    </p>
-      <form
-        className="flex flex-col gap-4 items-center justify-center p-6 bg-gray-100 rounded-md shadow-md"
-        action={formAction}
-      >
-        <Input
-          label="Full Name"
-          name="fullName"
-          defaultValue={formState?.studentName || user.studentName}
-          onChange={(value = true) => setIsUpdated(value)}
-        />
-        <Input
-          label="Contact Number"
-          name="contactNumber"
-          defaultValue={formState?.contactNumber || user.contactNumber}
-          onChange={(value = true) => setIsUpdated(value)}
-        />
-        <TextArea
-          label="Address"
-          name="address"
-          value={formState?.address || user.address}
-          changeAddress={changeAddress}
-          setChangeAddress={setChangeAddress}
-          onChange={(value = true) => setIsUpdated(value)}
-          disabled
-        />
-        <button
-          type="submit"
-          disabled={!isUpdated}
-          className="bg-green-500 rounded-md px-4 py-2 w-1/2 text-white font-semibold hover:bg-green-600 hover:cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed"
-        >
-          {
-            isPending && <CircularProgress color="white" size="1.5rem" />
-          }
-          {
-            !isPending && <span>Update</span>
-          }
+    <div className="flex items-center justify-center h-[700px] bg-gray-100">
+      <div className="w-[50%] bg-white p-8 rounded-xl shadow-lg">
+        <div className="flex flex-col items-center">
+          <img
+            src={user.img}
+            alt="profile"
+            className="w-32 h-32 rounded-full border-4 border-blue-300 object-cover mb-4"
+          />
+          <p className="text-gray-700 font-medium">{user.mailId}</p>
+        </div>
 
-        </button>
-      </form>
+        <form className="flex flex-col gap-4 mt-6" action={formAction}>
+          <Input
+            label="Full Name"
+            name="fullName"
+            defaultValue={formState?.studentName || user.studentName}
+            onChange={() => setIsUpdated(true)}
+          />
+          <Input
+            label="Contact Number"
+            name="contactNumber"
+            defaultValue={formState?.contactNumber || user.contactNumber}
+            onChange={() => setIsUpdated(true)}
+          />
+          <TextArea
+            label="Address"
+            name="address"
+            value={formState?.address || user.address}
+            changeAddress={changeAddress}
+            setChangeAddress={setChangeAddress}
+            onChange={() => setIsUpdated(true)}
+            disabled
+          />
+
+          <button
+            type="submit"
+            disabled={!isUpdated}
+            className="bg-green-500 rounded-md px-4 py-2 w-full text-white font-semibold hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            {isPending ? <CircularProgress color="inherit" size="1.5rem" /> : <span>Update</span>}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function CollegeDashboard() {
     }
   return (
     <>
-      <main className="p-6 flex flex-col">
+      <main className="p-6 flex flex-col  h-[800px] scroll-y-auto">
         <div className="w-full">
           <ul className="flex flex-row justify-between items-center text-center rounded-t-lg text-black text-h4 border-b-2 border-gray-200">
             <li
@@ -61,12 +61,12 @@ export default function CollegeDashboard() {
               }`}
             >
               <button onClick={() => handleSelectSection("accounts")}>
-                Accounts
+                Account Settings
               </button>
             </li>
           </ul>
         </div>
-        <div className="w-full rounded-b-lg border-2">
+        <div className="w-full rounded-b-lg border-2 h-[700px] py-8">
           {/* Content for each section goes here */}
           {dashboardComponent}
         </div>

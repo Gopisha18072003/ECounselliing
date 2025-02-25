@@ -5,39 +5,41 @@ import {
 } from "../../../utils/http";
 import CircularProgress from "@mui/material/CircularProgress";
 import ApplicationDetails from "../../student/counselling/ApplicationDetails";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EntityDetailsModal from "../../../components/EntityDetailsModal";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../../store/uiSlice";
 import { queryClient } from "../../../utils/queryClient";
-import { useEffect } from "react";
 import { authActions } from "../../../store/authSlice";
 import { useNavigate } from "react-router-dom";
+
 export default function AllApplications() {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["allApplications"],
     queryFn: fetchAllApplications,
   });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   function handleClickApplication(id) {
     setSelectedApplication(null);
     const application = data?.find((app) => app.id === id);
     setSelectedApplication(application);
     setIsModalOpen(true);
   }
-  const [isClosing, setIsClosing] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   async function handleCloseApplicationSubmission() {
-    // Close the application submission
     try {
       setIsClosing(true);
       const response = await updateCounsellingStatus(
         "APPLICATION_SUBMISSION_CLOSED"
       );
       if (response.statusCode === 200) {
-        // Show success notification
         dispatch(
           uiActions.showSuccessNotification({
             status: "Success",
@@ -46,7 +48,6 @@ export default function AllApplications() {
         );
       }
     } catch (error) {
-      // Show error notification
       dispatch(
         uiActions.showErrorNotification({
           status: "Error",
@@ -62,6 +63,7 @@ export default function AllApplications() {
       queryClient.invalidateQueries("counsellingStatusAdmin");
     }
   }
+
   useEffect(() => {
     if (isError && error && !isPending) {
       dispatch(
@@ -76,72 +78,77 @@ export default function AllApplications() {
       dispatch(authActions.logout());
     }
   }, [isError, navigate, dispatch]);
-  return (
-    <div className="bg-white shadow-md p-4 rounded-md w-1/2">
-      <h1 className="text-[1.5rem] font-medium ">All Applications</h1>
-      <div className="h-[0.5px] bg-gray-400 mb-4"></div>
-      {isPending && <CircularProgress color="primary" />}
-      {isError && <p>{error}</p>}
-      {!isPending && data?.length > 0 && !data.statusCode && (
-        <div className="w-full">
-          <table className="w-full">
-            <thead className="bg-gray-100">
-              <tr className="border-b-2 ">
-                <td className="font-semibold text-lg">Id</td>
-                <td className="font-semibold text-lg">Name</td>
-                <td className="font-semibold text-lg">E-Rank</td>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((application) => (
-                <tr key={application.id} className="border-b-2 ">
-                  {/* <ApplicationDetails data={application} /> */}
 
-                  <td className="py-2">{application.id}</td>
-                  <td>
-                    <button
-                      className="hover:text-blue-500"
-                      onClick={() => handleClickApplication(application.id)}
-                    >
-                      {application.studentName}
-                    </button>
-                  </td>
-                  <td>{application.erank}</td>
+  return (
+    <div className="h-[600px] flex justify-center items-center bg-gray-100 px-6">
+      <div className="bg-white shadow-xl rounded-lg p-6 w-full max-w-2xl">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+          All Applications
+        </h1>
+        <div className="h-[1px] bg-gray-300 mb-4"></div>
+
+        {isPending && (
+          <div className="flex justify-center py-6">
+            <CircularProgress color="primary" />
+          </div>
+        )}
+
+        {isError && <p className="text-red-500 text-center">{error}</p>}
+
+        {!isPending && data?.length > 0 && !data.statusCode && (
+          <div className="w-full overflow-x-auto">
+            <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
+              <thead className="bg-gray-200">
+                <tr className="border-b">
+                  <th className="py-3 px-4 text-left font-semibold text-gray-700">ID</th>
+                  <th className="py-3 px-4 text-left font-semibold text-gray-700">Name</th>
+                  <th className="py-3 px-4 text-left font-semibold text-gray-700">E-Rank</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <button
-            className="mt-8 mb-4 bg-red-500 text-white rounded px-2 py-2 hover:bg-red-600 w-[240px] disabled:cursor-not-allowed disabled:bg-gray-400"
-            disabled={isClosing}
-            onClick={handleCloseApplicationSubmission}
+              </thead>
+              <tbody className="divide-y divide-gray-300">
+                {data.map((application) => (
+                  <tr key={application.id} className="hover:bg-gray-100">
+                    <td className="py-3 px-4">{application.id}</td>
+                    <td className="py-3 px-4">
+                      <button
+                        className="text-blue-600 hover:underline"
+                        onClick={() => handleClickApplication(application.id)}
+                      >
+                        {application.studentName}
+                      </button>
+                    </td>
+                    <td className="py-3 px-4">{application.erank}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              className="mt-6 bg-red-600 text-white font-medium px-4 py-2 rounded-lg w-full hover:bg-red-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              disabled={isClosing}
+              onClick={handleCloseApplicationSubmission}
+            >
+              {isClosing ? <CircularProgress size={18} color="inherit" /> : "Close Application Submission"}
+            </button>
+          </div>
+        )}
+
+        {!isPending && data?.statusCode === 204 && (
+          <p className="text-center text-gray-500 font-semibold">
+            No Applications Found
+          </p>
+        )}
+
+        {isModalOpen && (
+          <EntityDetailsModal
+            data={selectedApplication}
+            isLoading={false}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
           >
-            {isClosing ? (
-              <CircularProgress size={18} color="white " />
-            ) : (
-              "Close Application Submission"
-            )}
-          </button>
-        </div>
-      )}
-      {!isPending && data.statusCode === 204 && (
-        <p className="text-center mb-4 text-gray-400 font-semibold">
-          No Applications Found
-        </p>
-      )}
-      {isModalOpen && (
-        <EntityDetailsModal
-          data={selectedApplication}
-          isLoading={false} // Pass Loading State
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            
-          }}
-        >
-          <ApplicationDetails data={selectedApplication} />
-        </EntityDetailsModal>
-      )}
+            <ApplicationDetails data={selectedApplication} />
+          </EntityDetailsModal>
+        )}
+      </div>
     </div>
   );
 }

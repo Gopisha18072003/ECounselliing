@@ -1,16 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../../store/authSlice";
-import { uiActions } from "../../../store/uiSlice";
-import {
-  getAllocationResultCollege,
-  resetCounselling,
-} from "../../../utils/http";
-import { queryClient } from "../../../utils/queryClient";
-import { useState } from "react";
+import { getAllocationResultCollege } from "../../../utils/http";
+
 export default function Result() {
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
@@ -18,54 +11,51 @@ export default function Result() {
   const {
     data: allocationResult,
     isPending: isResultPending,
-    isError: isResultError,
-    error,
   } = useQuery({
     queryKey: ["allocationResult"],
     queryFn: () => getAllocationResultCollege(user.collegeName),
   });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-console.log(allocationResult)
-  return (
-    <div className="bg-white p-4 rounded shadow-md w-[70%]">
-      <h1 className="mb-4 text-center font-bold text-2xl">
-        Allocation Result out
-      </h1>
-      {isResultPending && <CircularProgress size="1.3rem" color="primary" />}
-      {!isResultPending &&
-        allocationResult &&
-        allocationResult?.data?.length > 0 && (
-          <>
-            <table className="w-full ">
-              <thead className="bg-gray-200 font-semibold">
-                <tr>
-                  <td className="p-2">Id</td>
-                  <td>Name</td>
-                  <td>Branch</td>
-                </tr>
-              </thead>
-              <tbody>
-                {allocationResult.data.map((result) => (
-                  <tr key={result.id} className="border-2">
-                    <td className="p-2">{result.id}</td>
-                    <td>{result.studentName}</td>
 
-                    <td>{result.departmentName}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            
-          </>
-        )}
-        {
-            !isResultPending &&
-            !allocationResult &&
-             (
-                <h2>No Students are alloted to your college</h2>
-            )
-        }
+  return (
+    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg  overflow-auto border-2 ">
+      <h1 className="text-center font-bold text-2xl text-gray-800 mb-6">
+        Allocation Result
+      </h1>
+
+      {isResultPending && (
+        <div className="flex justify-center">
+          <CircularProgress size="1.5rem" color="primary" />
+        </div>
+      )}
+
+      {!isResultPending && allocationResult?.data?.length > 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200 text-gray-700 font-semibold">
+              <tr>
+                <th className="p-3 border border-gray-300">ID</th>
+                <th className="p-3 border border-gray-300">Name</th>
+                <th className="p-3 border border-gray-300">Branch</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allocationResult.data.map((result) => (
+                <tr key={result.id} className="border border-gray-300 hover:bg-gray-100">
+                  <td className="p-3 text-center">{result.id}</td>
+                  <td className="p-3 text-center">{result.studentName}</td>
+                  <td className="p-3 text-center">{result.departmentName}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {!isResultPending && !allocationResult?.data?.length && (
+        <h2 className="text-center text-red-500 font-medium mt-6">
+          No students are allotted to your college.
+        </h2>
+      )}
     </div>
   );
 }

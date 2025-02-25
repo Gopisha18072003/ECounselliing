@@ -5,77 +5,38 @@ import nicLogo from '../assets/images/nicLogo.png';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 text-center py-4">
+    <footer className="bg-gray-100 text-center pb-6">
       {/* Top Terms Links */}
-      <div className="bg-blue-500 text-white text-sm py-2">
-        <ul className="flex flex-wrap justify-center space-x-4">
-          <li>
-            <a href="#" className="hover:underline">
-              Terms and Conditions
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:underline">
-              Hyperlink Policy
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:underline">
-              Privacy Policy
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:underline">
-              Copyright Policy
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:underline">
-              Disclaimer
-            </a>
-          </li>
+      <div className="bg-blue-500 text-white text-sm py-3">
+        <ul className="flex flex-wrap justify-center gap-4">
+          {["Terms and Conditions", "Hyperlink Policy", "Privacy Policy", "Copyright Policy", "Disclaimer"].map((item) => (
+            <li key={item}>
+              <a href="#" className="hover:underline">{item}</a>
+            </li>
+          ))}
         </ul>
       </div>
 
       {/* Footer Content */}
-      <div className="text-sm mt-4 px-4 text-gray-700">
+      <div className="text-sm mt-4 px-6 text-gray-700">
         <p>
           Content Owned and Maintained by{" "}
-          <span className="font-semibold">
-            Engineering Entrance Examinations Board.
-          </span>
+          <span className="font-semibold">Engineering Entrance Examinations Board.</span>
         </p>
         <p>
-          Designed, Developed and Hosted by{" "}
-          <span className="text-red-600 font-semibold">
-            National Informatics Centre,
-          </span>{" "}
-          <span className="text-red-600">
-            Ministry of Electronics & Information Technology
-          </span>
-          , Government of India
+          Designed, Developed, and Hosted by{" "}
+          <span className="text-red-600 font-semibold">National Informatics Centre,</span>{" "}
+          <span className="text-red-600">Ministry of Electronics & Information Technology</span>, Government of India.
         </p>
       </div>
 
-      {/* Logos */}
-      <div className="flex justify-center items-center mt-4 space-x-8">
-        <img
-          src={nicLogo}
-          alt="NIC Logo"
-          className="h-[6rem]"
-        />
-        <div className="border-l border-gray-300 h-8"></div>
-        <img
-          src={digitalIndiaLogo}
-          alt="Digital India Logo"
-          className="h-[6rem]"
-        />
-        <div className="border-l border-gray-300 h-8"></div>
-        <img
-          src={eCounsellingLogo}
-          alt="Counselling Services"
-          className="h-[4rem]"
-        />
+      {/* Logos Section */}
+      <div className="flex flex-wrap justify-center items-center mt-6 gap-6">
+        <img src={nicLogo} alt="NIC Logo" className="h-24 object-contain" />
+        <div className="border-l border-gray-400 h-10 hidden md:block"></div>
+        <img src={digitalIndiaLogo} alt="Digital India Logo" className="h-24 object-contain" />
+        <div className="border-l border-gray-400 h-10 hidden md:block"></div>
+        <img src={eCounsellingLogo} alt="Counselling Services" className="h-20 object-contain" />
       </div>
     </footer>
   );
