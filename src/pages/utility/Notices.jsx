@@ -38,6 +38,9 @@ export default function AllNotices() {
 export async function noticesLoader() {
   try {
     const response = await fetchNotices();
+    if (response.statusCode == 204){
+        return [];
+    }
     return response;
   } catch (err) {
     console.error("Loader error:", err);
