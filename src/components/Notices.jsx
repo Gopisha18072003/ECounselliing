@@ -24,7 +24,7 @@ export default function Notices({ notices }) {
   }, []);
 
   if (!notices || notices.length === 0) {
-    return <p className="text-center text-gray-500">No notices available.</p>;
+    return <p className="text-center text-gray-500 h-full flex items-center justify-center"><span>No notices available.</span></p>;
   }
 
   return (
