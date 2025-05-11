@@ -11,6 +11,8 @@ import { uiActions } from "../../../store/uiSlice.js";
 import { useNavigate } from "react-router-dom";
 import Result from "../counselling/Result.jsx";
 import React from "react";
+import CounsellingStepper from "../../../components/ProgressBar.jsx";
+
 export default function Counselling() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -45,6 +47,10 @@ export default function Counselling() {
   
     return (
       <div className="w-full h-[700px] flex flex-col justify-center items-center bg-gray-100 shadow-md p-6 rounded-lg overflow-auto">
+        {/* Counselling Stepper */}
+        <div className="w-full mx-auto">
+            <CounsellingStepper currentStatus={status}/>
+        </div>
         {/* Loading Spinner */}
         {(isStatusPending || isApplicationPending) && (
           <div className="flex justify-center items-center">
