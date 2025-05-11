@@ -58,10 +58,10 @@ export default function Counselling() {
   return (
     <div className="w-full h-[700px] flex flex-col justify-center items-center bg-gray-100 shadow-md p-6 rounded-lg overflow-auto">
       {/* Counselling Stepper */}
-      <div className="w-full mx-auto">
+      <div className="w-full mx-auto h-[110px]">
         <CounsellingStepper currentStatus={status} />
       </div>
-      <div className="">
+      <div className="flex-1 overflow-auto">
         {/* Loading Spinner */}
         {(isStatusPending || isApplicationPending) && (
           <div className="flex justify-center items-center">
