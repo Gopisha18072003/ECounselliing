@@ -64,7 +64,7 @@ export default function Counselling() {
       <div className="flex-1 overflow-auto">
         {/* Loading Spinner */}
         {(isStatusPending || isApplicationPending) && (
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center h-full">
             <CircularProgress color="primary" />
           </div>
         )}
