@@ -11,30 +11,37 @@ const CounsellingStepper = ({ currentStatus }) => {
   const currentIndex = steps.findIndex(step => step.value === currentStatus);
 
   return (
-    <div className="flex items-center justify-between w-full max-w-5xl mx-auto px-4 py-8">
+    <div className="relative flex justify-between items-center w-full max-w-5xl mx-auto px-4 py-8">
+      {/* Horizontal progress bar behind circles */}
+      <div className="absolute top-6 left-0 right-0 h-1 bg-gray-300 z-0" />
+
+      {/* Filled portion of the progress bar */}
+      <div
+        className="absolute top-6 left-0 h-1 bg-green-500 z-10 transition-all duration-300"
+        style={{
+          width: `${(currentIndex / (steps.length - 1)) * 100}%`
+        }}
+      />
+
       {steps.map((step, index) => {
         const isCompleted = index < currentIndex;
         const isCurrent = index === currentIndex;
 
         return (
-          <div key={step.value} className="flex-1 flex flex-col items-center relative">
-            {/* Line before the circle */}
-            {index !== 0 && (
-              <div className={`absolute top-4 left-0 w-full h-1 z-0 ${isCompleted ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-            )}
-
+          <div key={step.value} className="flex flex-col items-center relative z-20 w-1/4">
             {/* Step circle */}
-            <div className={`relative z-10 w-8 h-8 flex items-center justify-center rounded-full border-2 
-              ${isCompleted ? 'border-green-500 bg-white' :
-                isCurrent ? 'border-blue-500 bg-white' :
-                  'border-gray-400 bg-white'}`}>
+            <div
+              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 
+                ${isCompleted ? 'border-green-500' :
+                  isCurrent ? 'border-blue-500' : 'border-gray-400'}`}
+            >
               <div className={`w-3 h-3 rounded-full 
                 ${isCompleted ? 'bg-green-500' :
                   isCurrent ? 'bg-blue-500' : 'bg-gray-400'}`} />
             </div>
 
             {/* Step label */}
-            <div className={`mt-2 text-sm text-center ${isCurrent ? 'text-blue-600 font-semibold' : 'text-gray-600'}`}>
+            <div className={`mt-2 text-sm text-center ${isCurrent ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>
               {step.label}
             </div>
           </div>
