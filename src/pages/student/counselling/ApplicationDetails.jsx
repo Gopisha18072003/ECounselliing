@@ -40,11 +40,17 @@ export default function ApplicationDetails({ data }) {
             </div>
             <div className="border border-gray-300 bg-gray-50 px-4 py-2 rounded-md shadow-sm">
               <span className="font-medium text-gray-700">2. </span>
+              {
+                data.secondPreference?.collegeName == "" ? <span className="text-gray-800">-- No Preference selected --</span>:
               <span className="text-gray-800">{data.secondPreference.collegeName} - {data.secondPreference.departmentName}</span>
+              }
             </div>
             <div className="border border-gray-300 bg-gray-50 px-4 py-2 rounded-md shadow-sm">
               <span className="font-medium text-gray-700">3. </span>
+              {
+                data.thirdPreference?.collegeName == "" ? <span className="text-gray-800">-- No Preference selected --</span>:
               <span className="text-gray-800">{data.thirdPreference.collegeName} - {data.thirdPreference.departmentName}</span>
+              }
             </div>
           </div>
         </div>
