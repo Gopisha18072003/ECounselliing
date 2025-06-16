@@ -427,3 +427,16 @@ export const addNotice = async (noticeData) => {
       Authorization: `Bearer ${storedToken}`,
     });
 }
+export const toogleCollegeStatus = async (collegeName) => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+        throw new Error({
+          statusCode: "401",
+          message: "No authentication token found",
+        });
+      }
+      const url = `${API_BASE_URL}/admin/toggle-status/${collegeName}`;
+    return sendRequest(url, "PATCH", noticeData, {
+      Authorization: `Bearer ${storedToken}`,
+    });
+}

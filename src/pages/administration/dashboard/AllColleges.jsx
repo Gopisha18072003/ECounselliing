@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllColleges, fetchCollegeDetails } from "../../../utils/http";
+import { fetchAllColleges, fetchCollegeDetails, toogleCollegeStatus } from "../../../utils/http";
 import { uiActions } from "../../../store/uiSlice";
 import { authActions } from "../../../store/authSlice";
 import EntityDetailsModal from "../../../components/EntityDetailsModal";
@@ -77,7 +77,38 @@ export default function AllColleges() {
     setIsModalOpen(true);
     handleGetCollegeDetails(college.collegeName);
   }
+  
+  async function handleToggleCollegeStatus(collegeName){
+    try {
+      const response = await toggleCollegeStatus(collegeName);
+      if (response.statusCode === 200) {
+        dispatch(uiActions.showSuccessNotification({ status: "success", message: response.message }));
+        document.reload();
+      }
+      if (response.statusCode === 500) {
+        dispatch(
+          uiActions.showErrorNotification({
+            status: "fail",
+            message: ["Data is too long"],
+          })
+        );
+      }
 
+      return { errors: null };
+    } catch (error) {
+      dispatch(
+        uiActions.showErrorNotification({
+          status: "fail",
+          message: [error.message],
+        })
+      );
+      navigate("/login/admin");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      dispatch(authActions.logout());
+    }
+  }
+  
   return (
     <div className="p-6 bg-gray-100 h-[600px] rounded-lg">
       {!isLoading && allColleges?.length > 0 && (
@@ -114,9 +145,9 @@ export default function AllColleges() {
             </td>
             <td className="px-6 py-4">
               {!college.status ? (
-                <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Unblock</button>
+                <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded" onClick={() => handleToggleCollegeStatus(college.collegeName)}>Unblock</button>
               ) : (
-                <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Block</button>
+                <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded" onClick={() => handleToggleCollegeStatus(college.collegeName)}>Block</button>
               )}
             </td>
           </tr>
