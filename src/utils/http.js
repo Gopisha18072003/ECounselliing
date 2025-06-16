@@ -427,7 +427,7 @@ export const addNotice = async (noticeData) => {
       Authorization: `Bearer ${storedToken}`,
     });
 }
-export const toogleCollegeStatus = async (collegeName) => {
+export const toggleCollegeStatus = async (collegeName) => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
         throw new Error({

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllColleges, fetchCollegeDetails, toogleCollegeStatus } from "../../../utils/http";
+import { fetchAllColleges, fetchCollegeDetails, toggleCollegeStatus } from "../../../utils/http";
 import { uiActions } from "../../../store/uiSlice";
 import { authActions } from "../../../store/authSlice";
 import EntityDetailsModal from "../../../components/EntityDetailsModal";
@@ -102,10 +102,7 @@ export default function AllColleges() {
           message: [error.message],
         })
       );
-      navigate("/login/admin");
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      dispatch(authActions.logout());
+      
     }
   }
   
