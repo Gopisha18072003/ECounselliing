@@ -427,6 +427,8 @@ export const addNotice = async (noticeData) => {
       Authorization: `Bearer ${storedToken}`,
     });
 }
+
+// toggleCollegeStatus
 export const toggleCollegeStatus = async (collegeName) => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
@@ -436,7 +438,7 @@ export const toggleCollegeStatus = async (collegeName) => {
         });
       }
       const url = `${API_BASE_URL}/admin/toggle-status/${collegeName}`;
-    return sendRequest(url, "PATCH", noticeData, {
+    return sendRequest(url, "PATCH",null, {
       Authorization: `Bearer ${storedToken}`,
     });
 }

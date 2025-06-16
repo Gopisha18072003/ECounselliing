@@ -83,13 +83,13 @@ export default function AllColleges() {
       const response = await toggleCollegeStatus(collegeName);
       if (response.statusCode === 200) {
         dispatch(uiActions.showSuccessNotification({ status: "success", message: response.message }));
-        document.reload();
+        location.reload()
       }
       if (response.statusCode === 500) {
         dispatch(
           uiActions.showErrorNotification({
             status: "fail",
-            message: ["Data is too long"],
+            message: ["Something went wrong"],
           })
         );
       }
